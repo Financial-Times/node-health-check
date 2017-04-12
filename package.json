@@ -1,0 +1,36 @@
+{
+  "name": "@financial-times/health-check",
+  "version": "0.0.0",
+  "description": "Build health check functions which comply with the FT health check standard",
+  "keywords": [],
+  "license": "MIT",
+  "homepage": "https://github.com/Financial-Times/node-health-check",
+  "bugs": {
+    "url": "https://github.com/Financial-Times/node-health-check/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Financial-Times/node-health-check.git"
+  },
+  "engines": {
+    "node": ">=6",
+    "npm": ">=4"
+  },
+  "main": "./lib/health-check.js",
+  "scripts": {
+    "test": "make verify test"
+  },
+  "dependencies": {
+    "lodash": "^4.17.2"
+  },
+  "devDependencies": {
+    "eslint": "^3.14.1",
+    "mocha": "^3.2.0",
+    "mockery": "^2.0.0",
+    "npm-prepublish": "^1.2.2",
+    "nyc": "^10.0.0",
+    "proclaim": "^3.4.4",
+    "sinon": "^1.17.6",
+    "sinon-as-promised": "^4.0.2"
+  }
+}

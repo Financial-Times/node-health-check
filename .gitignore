@@ -1,0 +1,6 @@
+.editorconfig
+.env
+.nyc_output
+coverage
+node_modules
+npm-debug.log
