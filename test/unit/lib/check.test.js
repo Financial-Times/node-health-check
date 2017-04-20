@@ -132,7 +132,7 @@ describe('lib/check', () => {
 				intervalId = 'mock-interval-id';
 				sinon.stub(global, 'setInterval').returns(intervalId);
 				boundRun = sinon.spy();
-				sinon.spy(Check.prototype, 'run');
+				sinon.stub(Check.prototype, 'run');
 				sinon.stub(instance.run, 'bind').returns(boundRun);
 				instance.start();
 			});
@@ -215,43 +215,9 @@ describe('lib/check', () => {
 		});
 
 		describe('.run()', () => {
-			let mockDateNew;
-			let returnedPromise;
 
-			beforeEach(() => {
-				mockDateNew = {
-					mockNew: true
-				};
-				Date.returns(mockDateNew);
-				instance.ok = false;
-				returnedPromise = instance.run();
-			});
-
-			it('returns a promise', () => {
-				assert.instanceOf(returnedPromise, Promise);
-			});
-
-			describe('.then()', () => {
-				let resolvedValue;
-
-				beforeEach(() => {
-					return returnedPromise.then(value => {
-						resolvedValue = value;
-					});
-				});
-
-				it('resolves with nothing', () => {
-					assert.isUndefined(resolvedValue);
-				});
-
-				it('updates the `lastUpdated` property', () => {
-					assert.strictEqual(instance.lastUpdated, mockDateNew);
-				});
-
-				it('updates the `ok` property', () => {
-					assert.isTrue(instance.ok);
-				});
-
+			it('throws an error', () => {
+				assert.throws(() => instance.run(), 'The Check class must be extended rather than used directly');
 			});
 
 		});
