@@ -26,6 +26,7 @@ Table Of Contents
     - [Requirements](#requirements)
     - [API Documentation](#api-documentation)
     - [Options](#options)
+    - [Health Check Configurations](#health-check-configurations)
     - [Examples](#examples)
   - [Contributing](#contributing)
   - [Publishing](#publishing)
@@ -49,27 +50,84 @@ npm install @financial-times/health-check
 This library makes use of [promises] – familiarity is assumed in the rest of the API documentation. You'll also need to require the module with:
 
 ```js
-const healthCheck = require('@financial-times/health-check');
+const HealthCheck = require('@financial-times/health-check');
 ```
 
-### `healthCheck( [options] )`
+### `new HealthCheck( [options] )`
 
 This function returns a new health check object. You can configure the health checks with [an options object](#options) if you need to override any defaults.
 
 ```js
-const health = healthCheck({
+const health = HealthCheck({
     checks: [
         // ...
     ]
 });
 ```
 
+The [given checks](#health-check-configurations) start polling immediately at the intervals that you specify. The returned instance has several methods for reading this data.
+
+#### `health.checks()`
+
+This returns a health check function that's compatible with the [Express Web Service] module. The returned function returns a promise which resolves to a JSON-friendly copy of the health check data.
+
+Assuming you've already included [Express] and [Express Web Service]:
+
+```js
+app.use(expressWebService({
+    healthCheck: health.check()
+}));
+```
+
+#### `health.gtg()`
+
+This returns a good-to-go function that's compatible with the [Express Web Service] module. The returned function returns a promise which resolves to either `true` or `false`.
+
+`false` will be the resolved value if any of the health checks with severity `1` are failing.
+
+Assuming you've already included [Express] and [Express Web Service]:
+
+```js
+app.use(expressWebService({
+    goodToGoTest: health.gtg()
+}));
+```
+
+#### `health.toJSON()`
+
+Get the health check output as an array that's safe for converting to JSON. You can use this if you don't intend on using the [Express Web Service] module.
+
 ### Options
 
-The Health Check module can be configured with a variety of options, passed in as an object to the `healthCheck` function. The available options are as follows:
+The Health Check module can be configured with a variety of options, passed in as an object to the `HealthCheck` constructor. The available options are as follows:
 
-  - `checks`: An array of healthcheck configuration objects. Defaults to an empty array
+  - `checks`: An array of [health check configuration objects](#health-check-configurations). Defaults to an empty array
   - `log`: A console object used to output logs. Defaults to the global `console` object
+
+### Health Check Configurations
+
+Each health check can be configured as an object. These follow the [FT health check standard], which has more information, and there are [examples](#examples) available to help you out. No matter what type of check you're adding, there are some common required properties:
+
+  - `type`: The type of the check. Currently only `ping-url` is supported. Additional configurations required by these types are documented below
+  - `businessImpact`: The business impact of the health check as a string
+  - `id`: The unique ID of the health check as a string. Must use only lowercase alphanumeric characters and hyphens.
+  - `name`: The name of the health check as a string.
+  - `panicGuide`: The panic guide for the health check as a string.
+  - `technicalSummary`: The technical summary for the health check as a string.
+
+There are also some common optional properties:
+
+  - `severity`: The severity level of the health check if it is failing. Must be one of `1` (high), `2` (medium), `3` (low)
+  - `interval`: The number of milliseconds to wait between checks. Defaults to `30000` (30 seconds)
+
+Different types of check may have additional config properties. These are documented below.
+
+#### Check Type: Ping URL
+
+The `ping-url` type requires some additional configuration:
+
+  - `url`: The URL that the check should ping
+  - `method`: The HTTP method to use when pinging the URL. Defaults to `"HEAD"`
 
 ### Examples
 
@@ -114,6 +172,8 @@ This software is published by the Financial Times under the [MIT licence][licens
 
 
 [#ft-origami]: https://financialtimes.slack.com/messages/ft-origami/
+[express]: https://expressjs.com/
+[express web service]: https://github.com/Financial-Times/express-web-service
 [ft health check standard]: https://docs.google.com/a/ft.com/document/d/18hefJjImF5IFp9WvPAm9Iq5_GmWzI9ahlKSzShpQl1s/edit?usp=sharing
 [issues]: https://github.com/Financial-Times/node-health-check/issues
 [license]: http://opensource.org/licenses/MIT
