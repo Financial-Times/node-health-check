@@ -5,142 +5,362 @@ const mockery = require('mockery');
 const sinon = require('sinon');
 
 describe('lib/health-check', () => {
+	let Check;
 	let defaults;
-	let healthCheck;
+	let HealthCheck;
 	let log;
-	let validateHealthCheck;
+	let PingUrlCheck;
 
 	beforeEach(() => {
+		Check = require('../mock/check.mock');
+		mockery.registerMock('./check', Check);
+
+		PingUrlCheck = require('../mock/ping-url-check.mock');
+		mockery.registerMock('./check/ping-url', PingUrlCheck);
+
 		defaults = sinon.spy(require('lodash/defaults'));
 		mockery.registerMock('lodash/defaults', defaults);
 
 		log = require('../mock/log.mock');
 
-		validateHealthCheck = sinon.stub();
-		mockery.registerMock('./validate-health-check', validateHealthCheck);
-
-		healthCheck = require('../../..');
+		HealthCheck = require('../../../lib/health-check');
 	});
 
-	it('exports a function', () => {
-		assert.isFunction(healthCheck);
+	it('exports a class constructor', () => {
+		assert.isFunction(HealthCheck);
+		/* eslint-disable new-cap */
+		assert.throws(() => HealthCheck(), /class constructor .* without 'new'/i);
+		/* eslint-enable new-cap */
 	});
 
-	it('has a `defaults` property', () => {
-		assert.isObject(healthCheck.defaults);
-	});
-
-	describe('.defaults', () => {
-
-		it('has a `checks` property', () => {
-			assert.deepEqual(healthCheck.defaults.checks, []);
-		});
-
-		it('has a `log` property', () => {
-			assert.strictEqual(healthCheck.defaults.log, console);
-		});
-
-	});
-
-	it('has a `defaults` property', () => {
-		assert.isObject(healthCheck.defaults);
-	});
-
-	describe('.checkDefaults', () => {
-
-		it('has an `interval` property', () => {
-			assert.deepEqual(healthCheck.checkDefaults.interval, 30000);
-		});
-
-	});
-
-	describe('healthCheck(options)', () => {
-		let health;
+	describe('new HealthCheck(options)', () => {
+		let instance;
+		let MockType1;
+		let MockType2;
+		let MockType3;
 		let options;
 
 		beforeEach(() => {
+			MockType1 = sinon.spy(Check);
+			MockType2 = sinon.spy(Check);
+			MockType3 = sinon.spy(Check);
+			HealthCheck.checkTypeMap = new Map([
+				['mock-type-1', MockType1],
+				['mock-type-2', MockType2],
+				['mock-type-3', MockType3]
+			]);
 			options = {
 				checks: [
 					{
-						output: {
-							id: 'mock-check-1'
-						},
-						config: {
-							interval: 123
-						}
+						id: 'mock-check-1',
+						type: 'mock-type-1'
 					},
 					{
-						output: {
-							name: 'mock-check-2'
-						}
+						id: 'mock-check-2',
+						type: 'mock-type-2'
+					},
+					{
+						id: 'mock-check-3',
+						type: 'mock-type-3'
 					}
 				],
-				log
+				log: log
 			};
-			health = healthCheck(options);
+			instance = new HealthCheck(options);
 		});
 
 		it('defaults the passed in options', () => {
+			assert.calledOnce(defaults);
 			assert.isObject(defaults.firstCall.args[0]);
 			assert.strictEqual(defaults.firstCall.args[1], options);
-			assert.strictEqual(defaults.firstCall.args[2], healthCheck.defaults);
+			assert.strictEqual(defaults.firstCall.args[2], HealthCheck.defaultOptions);
 		});
 
-		it('defaults the passed in health check options', () => {
-			assert.isObject(defaults.secondCall.args[0]);
-			assert.strictEqual(defaults.secondCall.args[1], options.checks[0].config);
-			assert.strictEqual(defaults.secondCall.args[2], healthCheck.checkDefaults);
-			assert.isObject(defaults.thirdCall.args[0]);
-			assert.isUndefined(defaults.thirdCall.args[1]);
-			assert.strictEqual(defaults.thirdCall.args[2], healthCheck.checkDefaults);
+		it('has an `options` property set to the defaulted options', () => {
+			assert.isDefined(instance.options);
+			assert.strictEqual(instance.options, defaults.firstCall.returnValue);
 		});
 
-		it('validates the passed in health check outputs', () => {
-			assert.calledTwice(validateHealthCheck);
-			assert.calledWithExactly(validateHealthCheck, options.checks[0].output);
-			assert.calledWithExactly(validateHealthCheck, options.checks[1].output);
+		it('creates a Check for each configuration in `options.checks`, using the class that their `type` property maps to', () => {
+			assert.calledThrice(Check);
+			assert.calledWithNew(MockType1.firstCall);
+			assert.calledWithExactly(MockType1.firstCall, options.checks[0]);
+			assert.calledWithNew(MockType2.firstCall);
+			assert.calledWithExactly(MockType2.firstCall, options.checks[1]);
+			assert.calledWithNew(MockType3.firstCall);
+			assert.calledWithExactly(MockType3.firstCall, options.checks[2]);
 		});
 
-		it('returns an object', () => {
-			assert.isObject(health);
-			assert.isNotNull(health);
+		it('has a `checkObjects` property set to an array of the created checks', () => {
+			assert.deepEqual(instance.checkObjects, [
+				MockType1.firstCall.returnValue,
+				MockType2.firstCall.returnValue,
+				MockType3.firstCall.returnValue
+			]);
 		});
 
-		describe('returned object', () => {
-
-			it('has a `_checks` property set to the defaulted _checks', () => {
-				assert.isDefined(health._checks);
-				assert.isArray(health._checks);
-				assert.deepEqual(health._checks[0], {
-					config: defaults.secondCall.returnValue,
-					output: options.checks[0].output
-				});
-				assert.deepEqual(health._checks[1], {
-					config: defaults.thirdCall.returnValue,
-					output: options.checks[1].output
-				});
-			});
-
-			it('has an `_options` property set to the defaulted _options', () => {
-				assert.isDefined(health._options);
-				assert.strictEqual(health._options, defaults.firstCall.returnValue);
-			});
-
+		it('has a `log` property set to the corresponding option value', () => {
+			assert.strictEqual(instance.log, options.log);
 		});
 
-		describe('when `options` is not defined', () => {
+		it('has a `checks` method', () => {
+			assert.isFunction(instance.checks);
+		});
+
+		describe('.checks()', () => {
+			let mockJson;
+			let returnedFunction;
 
 			beforeEach(() => {
-				defaults.reset();
-				health = healthCheck();
+				mockJson = [
+					{
+						id: 'mock-check-1'
+					},
+					{
+						id: 'mock-check-2'
+					},
+					{
+						id: 'mock-check-3'
+					}
+				];
+				sinon.stub(instance, 'toJSON').returns(mockJson);
+				returnedFunction = instance.checks();
 			});
 
-			it('defaults to an empty object', () => {
-				assert.deepEqual(defaults.firstCall.args[1], {});
+			it('returns a function', () => {
+				assert.isFunction(returnedFunction);
+			});
+
+			describe('.returnedFunction()', () => {
+				let returnedPromise;
+
+				beforeEach(() => {
+					returnedPromise = returnedFunction();
+				});
+
+				it('returns a promise', () => {
+					assert.instanceOf(returnedPromise, Promise);
+				});
+
+				describe('.then()', () => {
+					let resolvedValue;
+
+					beforeEach(() => {
+						return returnedPromise.then(value => {
+							resolvedValue = value;
+						});
+					});
+
+					it('resolves with the health check as JSON', () => {
+						assert.strictEqual(resolvedValue, mockJson);
+					});
+
+				});
+
 			});
 
 		});
 
+		it('has a `gtg` method', () => {
+			assert.isFunction(instance.gtg);
+		});
+
+		describe('.gtg()', () => {
+			let mockJson;
+			let returnedFunction;
+
+			beforeEach(() => {
+				mockJson = [
+					{
+						id: 'mock-check-1',
+						severity: 1,
+						ok: true
+					},
+					{
+						id: 'mock-check-2',
+						severity: 2,
+						ok: true
+					},
+					{
+						id: 'mock-check-3',
+						severity: 3,
+						ok: true
+					}
+				];
+				sinon.stub(instance, 'toJSON').returns(mockJson);
+				returnedFunction = instance.gtg();
+			});
+
+			it('returns a function', () => {
+				assert.isFunction(returnedFunction);
+			});
+
+			describe('.returnedFunction()', () => {
+				let returnedPromise;
+
+				beforeEach(() => {
+					returnedPromise = returnedFunction();
+				});
+
+				it('returns a promise', () => {
+					assert.instanceOf(returnedPromise, Promise);
+				});
+
+				describe('.then()', () => {
+					let resolvedValue;
+
+					beforeEach(() => {
+						return returnedPromise.then(value => {
+							resolvedValue = value;
+						});
+					});
+
+					it('resolves with `true`', () => {
+						assert.isTrue(resolvedValue);
+					});
+
+				});
+
+				describe('when a check is failing but it has a medium or low severity', () => {
+
+					beforeEach(() => {
+						mockJson[1].ok = false;
+						mockJson[2].ok = false;
+						returnedPromise = returnedFunction();
+					});
+
+					describe('.then()', () => {
+						let resolvedValue;
+
+						beforeEach(() => {
+							return returnedPromise.then(value => {
+								resolvedValue = value;
+							});
+						});
+
+						it('resolves with `true`', () => {
+							assert.isTrue(resolvedValue);
+						});
+
+					});
+
+				});
+
+				describe('when a check is failing and it has a high severity', () => {
+
+					beforeEach(() => {
+						mockJson[0].ok = false;
+						returnedPromise = returnedFunction();
+					});
+
+					describe('.then()', () => {
+						let resolvedValue;
+
+						beforeEach(() => {
+							return returnedPromise.then(value => {
+								resolvedValue = value;
+							});
+						});
+
+						it('resolves with `false`', () => {
+							assert.isFalse(resolvedValue);
+						});
+
+					});
+
+				});
+
+			});
+
+		});
+
+		it('has a `toJSON` method', () => {
+			assert.isFunction(instance.toJSON);
+		});
+
+		describe('.toJSON()', () => {
+			let returnValue;
+
+			beforeEach(() => {
+				instance.checkObjects[0].toJSON.returns('json-1');
+				instance.checkObjects[1].toJSON.returns('json-2');
+				instance.checkObjects[2].toJSON.returns('json-3');
+				returnValue = instance.toJSON();
+			});
+
+			it('returns an array of each check JSONified', () => {
+				assert.isArray(returnValue);
+				assert.deepEqual(returnValue, [
+					'json-1',
+					'json-2',
+					'json-3'
+				]);
+			});
+
+		});
+
+		it('has an `inspect` method', () => {
+			assert.isFunction(instance.inspect);
+		});
+
+		describe('.inspect()', () => {
+			let returnValue;
+
+			beforeEach(() => {
+				instance.checkObjects[0].inspect.returns('inspect-1');
+				instance.checkObjects[1].inspect.returns('inspect-2');
+				instance.checkObjects[2].inspect.returns('inspect-3');
+				returnValue = instance.inspect();
+			});
+
+			it('returns a string with a human-readable check set', () => {
+				assert.strictEqual(returnValue, [
+					'HealthCheck {',
+					'  inspect-1',
+					'  inspect-2',
+					'  inspect-3',
+					'}'
+				].join('\n'));
+			});
+
+		});
+
+		describe('when a class does not exist for a given check type', () => {
+
+			beforeEach(() => {
+				options.checks.push({
+					id: 'mock-check-4',
+					type: 'mock-type-4'
+				});
+			});
+
+			it('throws an error', () => {
+				assert.throws(() => new HealthCheck(options), 'Invalid check type: mock-type-4');
+			});
+
+		});
+
+	});
+
+	it('has a `defaultOptions` static property', () => {
+		assert.isObject(HealthCheck.defaultOptions);
+	});
+
+	describe('.defaultOptions', () => {
+
+		it('has a `checks` property', () => {
+			assert.deepEqual(HealthCheck.defaultOptions.checks, []);
+		});
+
+		it('has a `log` property', () => {
+			assert.strictEqual(HealthCheck.defaultOptions.log, console);
+		});
+
+	});
+
+	it('has a `checkTypeMap` static property', () => {
+		assert.instanceOf(HealthCheck.checkTypeMap, Map);
+		assert.strictEqual(HealthCheck.checkTypeMap.get('ping-url'), PingUrlCheck);
 	});
 
 });
