@@ -108,7 +108,7 @@ The Health Check module can be configured with a variety of options, passed in a
 
 Each health check can be configured as an object. These follow the [FT health check standard], which has more information, and there are [examples](#examples) available to help you out. No matter what type of check you're adding, there are some common required properties:
 
-  - `type`: The type of the check. One of `cpu`, `memory`, `ping-url`, `tcp-ip`. Additional configurations required by these types are documented below
+  - `type`: The type of the check. One of `cpu`, `disk-space`, `memory`, `ping-url`, `tcp-ip`. Additional configurations required by these types are documented below
   - `businessImpact`: The business impact of the health check as a string
   - `id`: The unique ID of the health check as a string. Must use only lowercase alphanumeric characters and hyphens.
   - `name`: The name of the health check as a string.
@@ -124,13 +124,19 @@ Different types of check may have additional config properties. These are docume
 
 #### Check Type: CPU
 
-The `cpu` type requires some additional configuration:
+The `cpu` type accepts some additional configuration:
 
   - `threshold`: The maximum CPU usage (as a percentage) that is allowed before the check will fail. Defaults to `50`
 
+#### Check Type: Disk Space
+
+The `disk-space` type accepts some additional configuration:
+
+  - `threshold`: The maximum disk space usage (as a percentage) that is allowed before the check will fail. Defaults to `75`
+
 #### Check Type: Memory
 
-The `memory` type requires some additional configuration:
+The `memory` type accepts some additional configuration:
 
   - `threshold`: The maximum memory usage (as a percentage) that is allowed before the check will fail. Defaults to `75`
 

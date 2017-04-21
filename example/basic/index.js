@@ -84,6 +84,25 @@ const health = new HealthCheck({
 			businessImpact: 'Things won\'t install',
 			technicalSummary: 'Something went wrong!',
 			panicGuide: 'Don\'t panic'
+		},
+
+		// This check monitors the system disk space usage
+		// It will fail if usage is above the threshold
+		{
+			// These properties are used to configure
+			// the disk space check
+			type: 'disk-space',
+			threshold: 80,
+			interval: 15000,
+
+			// These properties are output in the health
+			// check JSON
+			id: 'system-disk-space',
+			name: 'System Disk Space Usage',
+			severity: 2,
+			businessImpact: 'New files may not be saved',
+			technicalSummary: 'Something went wrong!',
+			panicGuide: 'Don\'t panic'
 		}
 
 	]
