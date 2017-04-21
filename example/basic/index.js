@@ -45,6 +45,25 @@ const health = new HealthCheck({
 			businessImpact: 'Things may be slow',
 			technicalSummary: 'Something went wrong!',
 			panicGuide: 'Don\'t panic'
+		},
+
+		// This check monitors the system CPU usage
+		// It will fail if usage is above the threshold
+		{
+			// These properties are used to configure
+			// the CPU check
+			type: 'cpu',
+			threshold: 50,
+			interval: 5000,
+
+			// These properties are output in the health
+			// check JSON
+			id: 'system-cpu',
+			name: 'System CPU Usage',
+			severity: 2,
+			businessImpact: 'Things may be slow',
+			technicalSummary: 'Something went wrong!',
+			panicGuide: 'Don\'t panic'
 		}
 
 	]

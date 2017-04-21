@@ -6,6 +6,7 @@ const sinon = require('sinon');
 
 describe('lib/health-check', () => {
 	let Check;
+	let CpuCheck;
 	let defaults;
 	let HealthCheck;
 	let log;
@@ -15,6 +16,9 @@ describe('lib/health-check', () => {
 	beforeEach(() => {
 		Check = require('../mock/check.mock');
 		mockery.registerMock('./check', Check);
+
+		CpuCheck = require('../mock/cpu-check.mock');
+		mockery.registerMock('./check/cpu', CpuCheck);
 
 		MemoryCheck = require('../mock/memory-check.mock');
 		mockery.registerMock('./check/memory', MemoryCheck);
@@ -364,6 +368,7 @@ describe('lib/health-check', () => {
 
 	it('has a `checkTypeMap` static property', () => {
 		assert.instanceOf(HealthCheck.checkTypeMap, Map);
+		assert.strictEqual(HealthCheck.checkTypeMap.get('cpu'), CpuCheck);
 		assert.strictEqual(HealthCheck.checkTypeMap.get('memory'), MemoryCheck);
 		assert.strictEqual(HealthCheck.checkTypeMap.get('ping-url'), PingUrlCheck);
 	});
