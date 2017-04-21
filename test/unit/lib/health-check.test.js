@@ -12,6 +12,7 @@ describe('lib/health-check', () => {
 	let log;
 	let MemoryCheck;
 	let PingUrlCheck;
+	let TcpIpCheck;
 
 	beforeEach(() => {
 		Check = require('../mock/check.mock');
@@ -25,6 +26,9 @@ describe('lib/health-check', () => {
 
 		PingUrlCheck = require('../mock/ping-url-check.mock');
 		mockery.registerMock('./check/ping-url', PingUrlCheck);
+
+		TcpIpCheck = require('../mock/tcp-ip-check.mock');
+		mockery.registerMock('./check/tcp-ip', TcpIpCheck);
 
 		defaults = sinon.spy(require('lodash/defaults'));
 		mockery.registerMock('lodash/defaults', defaults);
@@ -371,6 +375,7 @@ describe('lib/health-check', () => {
 		assert.strictEqual(HealthCheck.checkTypeMap.get('cpu'), CpuCheck);
 		assert.strictEqual(HealthCheck.checkTypeMap.get('memory'), MemoryCheck);
 		assert.strictEqual(HealthCheck.checkTypeMap.get('ping-url'), PingUrlCheck);
+		assert.strictEqual(HealthCheck.checkTypeMap.get('tcp-ip'), TcpIpCheck);
 	});
 
 });

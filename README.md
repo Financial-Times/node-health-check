@@ -108,7 +108,7 @@ The Health Check module can be configured with a variety of options, passed in a
 
 Each health check can be configured as an object. These follow the [FT health check standard], which has more information, and there are [examples](#examples) available to help you out. No matter what type of check you're adding, there are some common required properties:
 
-  - `type`: The type of the check. One of `cpu`, `memory`, `ping-url`. Additional configurations required by these types are documented below
+  - `type`: The type of the check. One of `cpu`, `memory`, `ping-url`, `tcp-ip`. Additional configurations required by these types are documented below
   - `businessImpact`: The business impact of the health check as a string
   - `id`: The unique ID of the health check as a string. Must use only lowercase alphanumeric characters and hyphens.
   - `name`: The name of the health check as a string.
@@ -140,6 +140,13 @@ The `ping-url` type requires some additional configuration:
 
   - `url`: The URL that the check should ping
   - `method`: The HTTP method to use when pinging the URL. Defaults to `"HEAD"`
+
+#### Check Type: TCP/IP
+
+The `tcp-ip` type requires some additional configuration:
+
+  - `host`: The hostname that the check should ping
+  - `port`: The TCP port to use when pinging the hostname. Defaults to `80`
 
 ### Examples
 

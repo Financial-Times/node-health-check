@@ -82,7 +82,8 @@ describe('lib/check/ping-url', () => {
 				assert.calledWith(request, {
 					uri: 'mock-url',
 					method: 'MOCK',
-					resolveWithFullResponse: true
+					resolveWithFullResponse: true,
+					timeout: instance.options.interval
 				});
 			});
 
@@ -175,7 +176,8 @@ describe('lib/check/ping-url', () => {
 					assert.calledWith(request, {
 						uri: 'mock-url',
 						method: 'HEAD',
-						resolveWithFullResponse: true
+						resolveWithFullResponse: true,
+						timeout: instance.options.interval
 					});
 				});
 
