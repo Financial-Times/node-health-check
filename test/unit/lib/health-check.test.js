@@ -8,6 +8,7 @@ describe('lib/health-check', () => {
 	let Check;
 	let CpuCheck;
 	let defaults;
+	let DiskSpaceCheck;
 	let HealthCheck;
 	let log;
 	let MemoryCheck;
@@ -20,6 +21,9 @@ describe('lib/health-check', () => {
 
 		CpuCheck = require('../mock/cpu-check.mock');
 		mockery.registerMock('./check/cpu', CpuCheck);
+
+		DiskSpaceCheck = require('../mock/disk-space-check.mock');
+		mockery.registerMock('./check/disk-space', DiskSpaceCheck);
 
 		MemoryCheck = require('../mock/memory-check.mock');
 		mockery.registerMock('./check/memory', MemoryCheck);
@@ -373,6 +377,7 @@ describe('lib/health-check', () => {
 	it('has a `checkTypeMap` static property', () => {
 		assert.instanceOf(HealthCheck.checkTypeMap, Map);
 		assert.strictEqual(HealthCheck.checkTypeMap.get('cpu'), CpuCheck);
+		assert.strictEqual(HealthCheck.checkTypeMap.get('disk-space'), DiskSpaceCheck);
 		assert.strictEqual(HealthCheck.checkTypeMap.get('memory'), MemoryCheck);
 		assert.strictEqual(HealthCheck.checkTypeMap.get('ping-url'), PingUrlCheck);
 		assert.strictEqual(HealthCheck.checkTypeMap.get('tcp-ip'), TcpIpCheck);
