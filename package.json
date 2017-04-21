@@ -23,7 +23,8 @@
   "dependencies": {
     "lodash": "^4.17.2",
     "request": "^2.81.0",
-    "request-promise-native": "^1.0.3"
+    "request-promise-native": "^1.0.3",
+    "usage": "^0.7.1"
   },
   "devDependencies": {
     "eslint": "^3.14.1",
