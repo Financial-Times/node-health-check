@@ -28,22 +28,21 @@ const health = new HealthCheck({
 			panicGuide: 'Don\'t panic'
 		},
 
-		// This check pings the GitHub home page every
-		// 60 seconds. It will fail if it receives a
-		// non-200 response
+		// This check monitors the process memory usage
+		// It will fail if usage is above the threshold
 		{
 			// These properties are used to configure
-			// the URL ping
-			type: 'ping-url',
-			url: 'https://github.com/',
-			interval: 60000,
+			// the memory check
+			type: 'memory',
+			threshold: 50,
+			interval: 15000,
 
 			// These properties are output in the health
 			// check JSON
-			id: 'github-home',
-			name: 'GitHub.com Home Page',
+			id: 'system-memory',
+			name: 'System Memory Usage',
 			severity: 2,
-			businessImpact: 'We won\'t be able to load some bundles',
+			businessImpact: 'Things may be slow',
 			technicalSummary: 'Something went wrong!',
 			panicGuide: 'Don\'t panic'
 		}

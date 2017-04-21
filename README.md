@@ -108,7 +108,7 @@ The Health Check module can be configured with a variety of options, passed in a
 
 Each health check can be configured as an object. These follow the [FT health check standard], which has more information, and there are [examples](#examples) available to help you out. No matter what type of check you're adding, there are some common required properties:
 
-  - `type`: The type of the check. Currently only `ping-url` is supported. Additional configurations required by these types are documented below
+  - `type`: The type of the check. One of `memory`, `ping-url`. Additional configurations required by these types are documented below
   - `businessImpact`: The business impact of the health check as a string
   - `id`: The unique ID of the health check as a string. Must use only lowercase alphanumeric characters and hyphens.
   - `name`: The name of the health check as a string.
@@ -121,6 +121,12 @@ There are also some common optional properties:
   - `interval`: The number of milliseconds to wait between checks. Defaults to `30000` (30 seconds)
 
 Different types of check may have additional config properties. These are documented below.
+
+#### Check Type: Memory
+
+The `memory` type requires some additional configuration:
+
+  - `threshold`: The maximum memory usage (as a percentage) that is allowed before the check will fail. Defaults to `75`
 
 #### Check Type: Ping URL
 

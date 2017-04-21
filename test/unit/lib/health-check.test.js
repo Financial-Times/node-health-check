@@ -9,11 +9,15 @@ describe('lib/health-check', () => {
 	let defaults;
 	let HealthCheck;
 	let log;
+	let MemoryCheck;
 	let PingUrlCheck;
 
 	beforeEach(() => {
 		Check = require('../mock/check.mock');
 		mockery.registerMock('./check', Check);
+
+		MemoryCheck = require('../mock/memory-check.mock');
+		mockery.registerMock('./check/memory', MemoryCheck);
 
 		PingUrlCheck = require('../mock/ping-url-check.mock');
 		mockery.registerMock('./check/ping-url', PingUrlCheck);
@@ -360,6 +364,7 @@ describe('lib/health-check', () => {
 
 	it('has a `checkTypeMap` static property', () => {
 		assert.instanceOf(HealthCheck.checkTypeMap, Map);
+		assert.strictEqual(HealthCheck.checkTypeMap.get('memory'), MemoryCheck);
 		assert.strictEqual(HealthCheck.checkTypeMap.get('ping-url'), PingUrlCheck);
 	});
 
