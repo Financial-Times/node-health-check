@@ -64,6 +64,26 @@ const health = new HealthCheck({
 			businessImpact: 'Things may be slow',
 			technicalSummary: 'Something went wrong!',
 			panicGuide: 'Don\'t panic'
+		},
+
+		// This check pings GitHub.com on port 80 every
+		// 30 seconds. It will fail if it cannot connect
+		{
+			// These properties are used to configure
+			// the TCP/IP check
+			type: 'tcp-ip',
+			host: 'github.com',
+			port: 80,
+			interval: 30000,
+
+			// These properties are output in the health
+			// check JSON
+			id: 'github-port-80',
+			name: 'GitHub TCP/IP Port 80',
+			severity: 2,
+			businessImpact: 'Things won\'t install',
+			technicalSummary: 'Something went wrong!',
+			panicGuide: 'Don\'t panic'
 		}
 
 	]
