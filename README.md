@@ -124,19 +124,19 @@ Different types of check may have additional config properties. These are docume
 
 #### Check Type: CPU
 
-The `cpu` type requires some additional configuration:
+The `cpu` type accepts some additional configuration:
 
   - `threshold`: The maximum CPU usage (as a percentage) that is allowed before the check will fail. Defaults to `50`
 
 #### Check Type: Disk Space
 
-The `disk-space` type requires some additional configuration:
+The `disk-space` type accepts some additional configuration:
 
   - `threshold`: The maximum disk space usage (as a percentage) that is allowed before the check will fail. Defaults to `75`
 
 #### Check Type: Memory
 
-The `memory` type requires some additional configuration:
+The `memory` type accepts some additional configuration:
 
   - `threshold`: The maximum memory usage (as a percentage) that is allowed before the check will fail. Defaults to `75`
 
