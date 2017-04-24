@@ -118,6 +118,28 @@ describe('lib/check/ping-url', () => {
 
 			});
 
+			describe('when `options.url` is a function', () => {
+
+				beforeEach(() => {
+					instance.ok = false;
+					instance.checkOutput = 'mock output';
+					request.reset();
+					instance.options.url = () => 'mock-url-from-function';
+					returnedPromise = instance.run();
+				});
+
+				it('calls `request` with the expected options', () => {
+					assert.calledOnce(request);
+					assert.calledWith(request, {
+						uri: 'mock-url-from-function',
+						method: 'MOCK',
+						resolveWithFullResponse: true,
+						timeout: instance.options.interval
+					});
+				});
+
+			});
+
 			describe('when the request fails', () => {
 				let requestError;
 
@@ -235,7 +257,7 @@ describe('lib/check/ping-url', () => {
 		describe('when `options` has an invalid `url` property', () => {
 
 			it('returns a descriptive error', () => {
-				const expectedErrorMessage = 'Invalid option: url must be a non-empty string';
+				const expectedErrorMessage = 'Invalid option: url must be a non-empty string or a function';
 				options.url = '';
 				returnValue = PingUrlCheck.validateOptions(options);
 				assert.instanceOf(returnValue, TypeError);
@@ -244,6 +266,19 @@ describe('lib/check/ping-url', () => {
 				returnValue = PingUrlCheck.validateOptions(options);
 				assert.instanceOf(returnValue, TypeError);
 				assert.strictEqual(returnValue.message, expectedErrorMessage, 'non-string');
+			});
+
+		});
+
+		describe('when `options.url` is a function', () => {
+
+			beforeEach(() => {
+				options.url = () => 'mock-url';
+				returnValue = PingUrlCheck.validateOptions(options);
+			});
+
+			it('returns `true`', () => {
+				assert.isTrue(returnValue);
 			});
 
 		});
