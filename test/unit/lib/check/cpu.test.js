@@ -118,6 +118,7 @@ describe('lib/check/cpu', () => {
 					usage.mockUsage.cpu = 75;
 					instance.ok = true;
 					instance.checkOutput = '';
+					instance.hasRun = true;
 					usage.lookup.reset();
 					returnedPromise = instance.run();
 				});
@@ -149,6 +150,50 @@ describe('lib/check/cpu', () => {
 
 					it('logs that the usage failed', () => {
 						assert.calledWithExactly(log.error, `Health check "mock name" failed: ${usage.mockUsage.cpu}% used`);
+					});
+
+				});
+
+			});
+
+			describe('when the usage is above `threshold` percent but this is the first run', () => {
+
+				beforeEach(() => {
+					usage.mockUsage.cpu = 75;
+					instance.ok = false;
+					instance.checkOutput = 'mock output';
+					delete instance.hasRun;
+					usage.lookup.reset();
+					returnedPromise = instance.run();
+				});
+
+				describe('.then()', () => {
+					let resolvedValue;
+
+					beforeEach(() => {
+						return returnedPromise.then(value => {
+							resolvedValue = value;
+						});
+					});
+
+					it('resolves with nothing', () => {
+						assert.isUndefined(resolvedValue);
+					});
+
+					it('sets the `ok` property to `true`', () => {
+						assert.isTrue(instance.ok);
+					});
+
+					it('sets the `checkOutput` property to the percentage CPU usage', () => {
+						assert.strictEqual(instance.checkOutput, `${usage.mockUsage.cpu}% used`);
+					});
+
+					it('updates the `lastUpdated` property', () => {
+						assert.strictEqual(instance.lastUpdated, mockDate);
+					});
+
+					it('sets the `hasRun` property to `true`', () => {
+						assert.isTrue(instance.hasRun);
 					});
 
 				});
