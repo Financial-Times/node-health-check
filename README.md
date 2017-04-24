@@ -144,7 +144,7 @@ The `memory` type accepts some additional configuration:
 
 The `ping-url` type requires some additional configuration:
 
-  - `url`: The URL that the check should ping
+  - `url`: The URL that the check should ping. This accepts a string or a function that returns a string
   - `method`: The HTTP method to use when pinging the URL. Defaults to `"HEAD"`
 
 #### Check Type: TCP/IP
