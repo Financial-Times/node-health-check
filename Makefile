@@ -26,5 +26,5 @@ test-unit:
 	@$(DONE)
 
 test-unit-coverage:
-	@NODE_ENV=test nyc --reporter=text --reporter=html node_modules/.bin/_mocha test/unit --recursive
+	@NODE_ENV=test nyc --all --reporter=text --reporter=html mocha test/unit --recursive
 	@$(DONE)
