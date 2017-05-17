@@ -311,8 +311,8 @@ describe('lib/check/cpu', () => {
 		describe('when `options` has an invalid `threshold` property', () => {
 
 			it('returns a descriptive error', () => {
-				const expectedErrorMessage = 'Invalid option: threshold must be a number between 1 and 100';
-				options.threshold = 123;
+				const expectedErrorMessage = 'Invalid option: threshold must be a number between 1 and 200';
+				options.threshold = 234;
 				returnValue = CpuCheck.validateOptions(options);
 				assert.instanceOf(returnValue, TypeError);
 				assert.strictEqual(returnValue.message, expectedErrorMessage, 'too high');

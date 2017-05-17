@@ -4,16 +4,6 @@ Node Health Check
 
 Build health check functions which comply with the [FT health check standard].
 
-
----
-
-**:warning: Work In Progress :warning:**
-
-This is a work-in-progress and is not ready for use in production applications. Please [contact Origami](#contact) if you'd like more information.
-
----
-
-
 [![NPM version](https://img.shields.io/npm/v/@financial-times/health-check.svg)](https://www.npmjs.com/package/@financial-times/health-check)
 [![Build status](https://img.shields.io/circleci/project/Financial-Times/node-health-check.svg)](https://circleci.com/gh/Financial-Times/node-health-check)
 [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)][license]
