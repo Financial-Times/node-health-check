@@ -341,6 +341,32 @@ describe('lib/health-check', () => {
 
 		});
 
+		describe('when a check is an instance of HealthCheck.Check', () => {
+			let checkInstance;
+
+			beforeEach(() => {
+				checkInstance = sinon.createStubInstance(Check);
+				options.checks = [checkInstance];
+				Check.reset();
+				instance = new HealthCheck(options);
+			});
+
+			it('does not create a Check for the configuration', () => {
+				assert.notCalled(Check);
+			});
+
+			it('adds a log property to the check', () => {
+				assert.strictEqual(checkInstance.log, log);
+			});
+
+			it('has a `checkObjects` property set to an array of the created checks', () => {
+				assert.deepEqual(instance.checkObjects, [
+					checkInstance
+				]);
+			});
+
+		});
+
 		describe('when a class does not exist for a given check type', () => {
 
 			beforeEach(() => {
@@ -381,6 +407,10 @@ describe('lib/health-check', () => {
 		assert.strictEqual(HealthCheck.checkTypeMap.get('memory'), MemoryCheck);
 		assert.strictEqual(HealthCheck.checkTypeMap.get('ping-url'), PingUrlCheck);
 		assert.strictEqual(HealthCheck.checkTypeMap.get('tcp-ip'), TcpIpCheck);
+	});
+
+	it('has a `Check` static property', () => {
+		assert.strictEqual(HealthCheck.Check, Check);
 	});
 
 });

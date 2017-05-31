@@ -39,9 +39,9 @@
   },
   "nyc": {
     "exclude": [
-        "coverage",
-        "example",
-        "test"
+      "coverage",
+      "example",
+      "test"
     ]
   }
 }
