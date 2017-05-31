@@ -87,6 +87,34 @@ app.use(expressWebService({
 
 Get the health check output as an array that's safe for converting to JSON. You can use this if you don't intend on using the [Express Web Service] module.
 
+### `new HealthCheck.Check( [options] )`
+
+This class is used to create custom health checks. You'll need to extend this class in order to use it, and can pass instances directly into `HealthCheck` when you instantiate it. E.g.
+
+```js
+class MyHealthCheck extends HealthCheck.Check {
+
+    constructor(options) {
+        super(options);
+    }
+
+    // Must return a promise
+    run() {
+        return new Promise(resolve => {
+            // Must set these properties
+            this.ok = true;
+            this.checkOutput = '';
+            this.lastUpdated = new Date();
+            resolve();
+        });
+    }
+
+}
+```
+
+[See examples](#examples) for more information, or look through [`lib/check`](lib/check) for more classes which already extend the base Check class.
+
+
 ### Options
 
 The Health Check module can be configured with a variety of options, passed in as an object to the `HealthCheck` constructor. The available options are as follows:
@@ -152,6 +180,12 @@ You can find example implementations of health checks in the `examples` folder o
 
     ```sh
     node examples/basic
+    ```
+
+  - **Custom:** create and run some custom health checks:
+
+    ```sh
+    node examples/custom
     ```
 
 
