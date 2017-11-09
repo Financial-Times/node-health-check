@@ -5,13 +5,11 @@ machine:
 
 dependencies:
   pre:
-    - npm prune --production=false && npm install --no-spin --no-progress
     - echo "//registry.npmjs.org/:_authToken=${NPM_AUTH_TOKEN}" > ${HOME}/.npmrc
 
 test:
   override:
-    - make verify
-    - make test
+    - make ci
 
 deployment:
   release:

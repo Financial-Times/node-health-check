@@ -28,6 +28,7 @@
     "usage": "^0.7.1"
   },
   "devDependencies": {
+    "@financial-times/origami-service-makefile": "^6.0.1",
     "eslint": "^3.14.1",
     "mocha": "^3.2.0",
     "mockery": "^2.0.0",
