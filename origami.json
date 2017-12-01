@@ -1,0 +1,12 @@
+{
+	"description": "Build health check functions which comply with the FT health check standard",
+	"origamiType": null,
+	"origamiVersion": 1,
+	"keywords": [],
+	"support": "https://github.com/Financial-Times/node-health-check/issues",
+	"supportStatus": "active",
+	"supportContact": {
+		"email": "origami.support@ft.com",
+		"slack": "financialtimes/ft-origami"
+	}
+}
