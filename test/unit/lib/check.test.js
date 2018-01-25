@@ -131,6 +131,7 @@ describe('lib/check', () => {
 			beforeEach(() => {
 				intervalId = 'mock-interval-id';
 				sinon.stub(global, 'setInterval').returns(intervalId);
+				sinon.stub(instance, 'isRunning').returns(false);
 				boundRun = sinon.spy();
 				sinon.stub(Check.prototype, 'run');
 				sinon.stub(instance.run, 'bind').returns(boundRun);
@@ -159,7 +160,7 @@ describe('lib/check', () => {
 			describe('when the check has already been started', () => {
 
 				beforeEach(() => {
-					instance._interval = 'not-a-real-interval';
+					instance.isRunning.returns(true);
 				});
 
 				it('throws an error', () => {
@@ -178,6 +179,7 @@ describe('lib/check', () => {
 			let intervalId;
 
 			beforeEach(() => {
+				sinon.stub(instance, 'isRunning').returns(true);
 				instance._interval = intervalId = 'mock-interval-id';
 				sinon.stub(global, 'clearInterval');
 				instance.stop();
@@ -199,11 +201,37 @@ describe('lib/check', () => {
 			describe('when the check has not been started', () => {
 
 				beforeEach(() => {
-					delete instance._interval;
+					instance.isRunning.returns(false);
 				});
 
 				it('throws an error', () => {
 					assert.throws(() => instance.stop(), 'The check has not been started');
+				});
+
+			});
+
+		});
+
+		it('has an `isRunning` method', () => {
+			assert.isFunction(instance.isRunning);
+		});
+
+		describe('.isRunning()', () => {
+
+			describe('when the `_interval` property is set', () => {
+
+				it('returns `true`', () => {
+					instance._interval = 'mock-interval';
+					assert.isTrue(instance.isRunning());
+				});
+
+			});
+
+			describe('when the `_interval` property is not set', () => {
+
+				it('returns `false`', () => {
+					delete instance._interval;
+					assert.isFalse(instance.isRunning());
 				});
 
 			});

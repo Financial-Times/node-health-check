@@ -87,6 +87,14 @@ app.use(expressWebService({
 
 Get the health check output as an array that's safe for converting to JSON. You can use this if you don't intend on using the [Express Web Service] module.
 
+#### `health.stop()`
+
+This stops all of the checks from running. This is useful if the health checks are keeping the Node.js process open and you need it to close. E.g. after integration tests.
+
+```js
+health.stop();
+```
+
 ### `new HealthCheck.Check( [options] )`
 
 This class is used to create custom health checks. You'll need to extend this class in order to use it, and can pass instances directly into `HealthCheck` when you instantiate it. E.g.
