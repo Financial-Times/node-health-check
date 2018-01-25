@@ -23,6 +23,7 @@ function Check(options) {
 
 		// Methods
 		inspect: sinon.stub(),
+		isRunning: sinon.stub().returns(true),
 		run: sinon.stub(),
 		start: sinon.stub(),
 		stop: sinon.stub(),

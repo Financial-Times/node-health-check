@@ -119,6 +119,28 @@ describe('lib/health-check', () => {
 			assert.strictEqual(instance.log, options.log);
 		});
 
+		it('has a `stop` method', () => {
+			assert.isFunction(instance.stop);
+		});
+
+		describe('.stop()', () => {
+
+			beforeEach(() => {
+				instance.checkObjects[2].isRunning.returns(false);
+				instance.stop();
+			});
+
+			it('stops each check from running', () => {
+				assert.calledOnce(instance.checkObjects[0].isRunning);
+				assert.calledOnce(instance.checkObjects[0].stop);
+				assert.calledOnce(instance.checkObjects[1].isRunning);
+				assert.calledOnce(instance.checkObjects[1].stop);
+				assert.calledOnce(instance.checkObjects[2].isRunning);
+				assert.notCalled(instance.checkObjects[2].stop);
+			});
+
+		});
+
 		it('has a `checks` method', () => {
 			assert.isFunction(instance.checks);
 		});
