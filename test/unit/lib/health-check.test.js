@@ -60,11 +60,11 @@ describe('lib/health-check', () => {
 			MockType1 = sinon.spy(Check);
 			MockType2 = sinon.spy(Check);
 			MockType3 = sinon.spy(Check);
-			HealthCheck.checkTypeMap = new Map([
-				['mock-type-1', MockType1],
-				['mock-type-2', MockType2],
-				['mock-type-3', MockType3]
-			]);
+			HealthCheck.checkTypeMap = {
+				'mock-type-1': MockType1,
+				'mock-type-2': MockType2,
+				'mock-type-3': MockType3
+			};
 			options = {
 				checks: [
 					{
@@ -423,12 +423,12 @@ describe('lib/health-check', () => {
 	});
 
 	it('has a `checkTypeMap` static property', () => {
-		assert.instanceOf(HealthCheck.checkTypeMap, Map);
-		assert.strictEqual(HealthCheck.checkTypeMap.get('cpu'), CpuCheck);
-		assert.strictEqual(HealthCheck.checkTypeMap.get('disk-space'), DiskSpaceCheck);
-		assert.strictEqual(HealthCheck.checkTypeMap.get('memory'), MemoryCheck);
-		assert.strictEqual(HealthCheck.checkTypeMap.get('ping-url'), PingUrlCheck);
-		assert.strictEqual(HealthCheck.checkTypeMap.get('tcp-ip'), TcpIpCheck);
+		assert.instanceOf(HealthCheck.checkTypeMap, Object);
+		assert.strictEqual(HealthCheck.checkTypeMap['cpu'], CpuCheck);
+		assert.strictEqual(HealthCheck.checkTypeMap['disk-space'], DiskSpaceCheck);
+		assert.strictEqual(HealthCheck.checkTypeMap['memory'], MemoryCheck);
+		assert.strictEqual(HealthCheck.checkTypeMap['ping-url'], PingUrlCheck);
+		assert.strictEqual(HealthCheck.checkTypeMap['tcp-ip'], TcpIpCheck);
 	});
 
 	it('has a `Check` static property', () => {
