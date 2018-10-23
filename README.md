@@ -48,7 +48,7 @@ const HealthCheck = require('@financial-times/health-check');
 This function returns a new health check object. You can configure the health checks with [an options object](#options) if you need to override any defaults.
 
 ```js
-const health = HealthCheck({
+const health = new HealthCheck({
     checks: [
         // ...
     ]
