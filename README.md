@@ -1,5 +1,5 @@
 
-Node Health Check [![NPM version](https://img.shields.io/npm/v/@financial-times/health-check.svg)](https://www.npmjs.com/package/@financial-times/health-check) [![Build status](https://img.shields.io/circleci/project/Financial-Times/node-health-check.svg)](https://circleci.com/gh/Financial-Times/node-health-check) [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)][license]
+Node Health Check [![NPM version](https://img.shields.io/npm/v/@financial-times/health-check.svg)](https://www.npmjs.com/package/@financial-times/health-check) [![Build status](https://img.shields.io/circleci/project/Financial-Times/node-health-check.svg)](https://circleci.com/gh/Financial-Times/node-health-check) [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](#license)
 =================
 
 Build health check functions which comply with the [FT health check standard].
