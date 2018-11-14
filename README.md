@@ -175,6 +175,18 @@ The `tcp-ip` type requires some additional configuration:
   - `host`: The hostname that the check should ping
   - `port`: The TCP port to use when pinging the hostname. Defaults to `80`
 
+#### Check Type: Graphite Threshold
+
+The `graphite-threshold` type requires some additional configuration:
+
+  - Ensure you have your API key for Graphite set in your environment variables as `FT_GRAPHITE_KEY`
+  - `url`: the full Graphite URL you want to receive a response from
+  - `threshold`: the number you want to set as your threshold to check against
+  - `direction`: set `above` if you want to check if something exceeds your threshold, or `below` if something falls below it
+  - `interval`: how often to check
+
+See `examples` for sample usage.
+
 ### Examples
 
 You can find example implementations of health checks in the `examples` folder of this repo:
