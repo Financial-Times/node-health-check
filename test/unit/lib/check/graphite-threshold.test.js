@@ -63,14 +63,19 @@ describe('lib/check/graphite-threshold', () => {
 		});
 
 		describe('.run()', () => {
-			let mockDate;
-			let returnedPromise;
+            let mockDate;
+            let returnedPromise;
+            let mockResponse;
 
 			beforeEach(() => {
 				mockDate = {
 					mock: true
 				};
-				sinon.stub(global, 'Date').returns(mockDate);
+                sinon.stub(global, 'Date').returns(mockDate);
+                mockResponse = {
+                    body: JSON.stringify([{"datapoints": [[302.2, 1542293760]]}])
+                };
+                request.resolves(mockResponse);
 				instance.ok = false;
 				instance.checkOutput = 'mock output';
 				returnedPromise = instance.run();
@@ -96,7 +101,7 @@ describe('lib/check/graphite-threshold', () => {
 			});
 
 			describe('.then()', () => {
-				let resolvedValue;
+                let resolvedValue;
 
 				beforeEach(() => {
 					return returnedPromise.then(value => {
@@ -106,11 +111,14 @@ describe('lib/check/graphite-threshold', () => {
 
 				it('resolves with nothing', () => {
 					assert.isUndefined(resolvedValue);
-				});
-
+                });
+                
+                // this test fails because 'ok' is set based on the threshold - need to look into this
 				it('sets the `ok` property to `true`', () => {
 					assert.isTrue(instance.ok);
-				});
+                });
+                
+                // this test is failing because our response.body does not exist (undefined) - need to look into it
 
 				it('sets the `checkOutput` property to an empty string', () => {
 					assert.strictEqual(instance.checkOutput, '');
