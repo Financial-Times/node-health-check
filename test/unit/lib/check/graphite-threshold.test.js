@@ -43,8 +43,9 @@ describe('lib/check/graphite-threshold', () => {
 				panicGuide: 'mock panic guide',
 				technicalSummary: 'mock technical summary',
                 url: 'mock-url',
-                threshold: 'mock-threshold',
-                direction: 'mock-direction'
+                threshold: 200,
+                direction: 'mock-direction',
+                graphiteKey: 'mock key'
 			};
 			sinon.stub(GraphiteThresholdCheck, 'assertOptionValidity');
 			startMock = sinon.stub(GraphiteThresholdCheck.prototype, 'start');
