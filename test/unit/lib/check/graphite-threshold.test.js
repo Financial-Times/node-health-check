@@ -86,7 +86,8 @@ describe('lib/check/graphite-threshold', () => {
 					uri: 'mock-url',
 					method: 'MOCK',
 					resolveWithFullResponse: true,
-					timeout: instance.options.interval
+                    timeout: instance.options.interval,
+                    headers: { key: instance.options.graphiteKey }
 				});
 			});
 
@@ -180,7 +181,8 @@ describe('lib/check/graphite-threshold', () => {
 						uri: 'mock-url',
 						method: 'GET',
 						resolveWithFullResponse: true,
-						timeout: instance.options.interval
+                        timeout: instance.options.interval,
+                        headers: { key: instance.options.graphiteKey }
 					});
 				});
 
