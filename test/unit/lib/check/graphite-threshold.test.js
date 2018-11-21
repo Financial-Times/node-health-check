@@ -43,8 +43,8 @@ describe('lib/check/graphite-threshold', () => {
 				panicGuide: 'mock panic guide',
 				technicalSummary: 'mock technical summary',
                 url: 'mock-url',
-                threshold: 200,
-                direction: 'mock-direction',
+                threshold: 300,
+                direction: 'above',
                 graphiteKey: 'mock key'
 			};
 			sinon.stub(GraphiteThresholdCheck, 'assertOptionValidity');
@@ -62,6 +62,32 @@ describe('lib/check/graphite-threshold', () => {
 			assert.calledWithExactly(GraphiteThresholdCheck.assertOptionValidity, options);
 		});
 
+		/////// LOOK AT THIS WITH ROWAN ///////
+
+		// describe('when the threshold is invalid - not a number', () => {
+		// 	let mockError;
+
+		// 	beforeEach(() => {
+		// 		mockError = new Error('You must set a numerical threshold');
+		// 		instance.threshold = null;
+		// 	});
+
+		// 	it('throws a validation error', () => {
+		// 		console.log(instance.threshold);
+		// 		let caughtError;
+		// 		try {
+		// 			GraphiteThresholdCheck.assertOptionValidity(instance.threshold);
+		// 		} catch (error) {
+		// 			console.log('hieeeeeeeee')
+		// 			caughtError = error;
+		// 		}
+		// 		assert.strictEqual(caughtError, mockError);
+		// 	});
+
+		// });
+
+		////////////////////////////////////////////
+
 		describe('.run()', () => {
             let mockDate;
             let returnedPromise;
@@ -73,9 +99,16 @@ describe('lib/check/graphite-threshold', () => {
 				};
                 sinon.stub(global, 'Date').returns(mockDate);
                 mockResponse = {
-                    body: JSON.stringify([{"datapoints": [[302.2, 1542293760]]}])
-                };
+                    body: JSON.stringify([
+                        { "datapoints" : 
+                            [
+                                [300, 1542293760]
+                            ]
+                        }
+                    ])
+				};
                 request.resolves(mockResponse);
+                instance.currentReading = '';
 				instance.ok = false;
 				instance.checkOutput = 'mock output';
 				returnedPromise = instance.run();
@@ -101,31 +134,130 @@ describe('lib/check/graphite-threshold', () => {
 			});
 
 			describe('.then()', () => {
-                let resolvedValue;
 
-				beforeEach(() => {
-					return returnedPromise.then(value => {
-						resolvedValue = value;
-					});
-				});
+                it('receives a response body', () => {
+                    assert.isObject(mockResponse);
+                });
 
-				it('resolves with nothing', () => {
-					assert.isUndefined(resolvedValue);
+                it('receives a response body containing the correct text', () => {
+                    console.log(mockResponse);
+                    assert.deepEqual(mockResponse, {body: JSON.stringify([{"datapoints": [[300, 1542293760]]}])}, 'Response does not match set mock response');
                 });
                 
-                // this test fails because 'ok' is set based on the threshold - need to look into this
-				it('sets the `ok` property to `true`', () => {
-					assert.isTrue(instance.ok);
-                });
-                
-                // this test is failing because our response.body does not exist (undefined) - need to look into it
-
 				it('sets the `checkOutput` property to an empty string', () => {
 					assert.strictEqual(instance.checkOutput, '');
 				});
 
 				it('updates the `lastUpdated` property', () => {
 					assert.strictEqual(instance.lastUpdated, mockDate);
+				});
+
+			});
+            
+            describe('for above - when the healthcheck passes `ok` is true', () => {
+
+                beforeEach(() => {
+					instance.ok = false;
+					instance.direction = 'above';
+                    instance.checkOutput = 'mock output';
+                    instance.threshold = 301;
+					returnedPromise = instance.run();
+				});
+				
+				describe('.then()', () => {
+
+					beforeEach(() => {
+						return returnedPromise
+					});
+
+					it('checks that current reading is below the threshold and will pass health check', () => {
+						assert.ok(instance.currentReading < instance.threshold);
+					});
+					
+					it('sets the `ok` property to `true`', () => {
+						assert.isTrue(instance.ok);
+					});
+				});
+            });
+
+            describe('for above - when the healthcheck fails `ok` is false', () => {
+
+                beforeEach(() => {
+					instance.ok = true;
+					instance.direction = 'above';
+                    instance.checkOutput = 'mock output';
+                    instance.threshold = 299;
+					returnedPromise = instance.run();
+                });
+
+				describe('.then()', () => {
+
+					beforeEach(() => {
+						return returnedPromise
+					});
+
+					it('checks that current reading is above the threshold and will fail health check', () => {
+						assert.ok(instance.currentReading > instance.threshold);
+					})
+					
+					it('sets the `ok` property to `false`', () => {
+						assert.isFalse(instance.ok);
+					});
+
+				});
+
+			});
+
+			describe('for below - when the healthcheck passes `ok` is true', () => {
+
+                beforeEach(() => {
+					instance.ok = false;
+					instance.checkOutput = 'mock output';
+					instance.direction = 'below';
+                    instance.threshold = 299;
+					returnedPromise = instance.run();
+				});
+				
+				describe('.then()', () => {
+
+					beforeEach(() => {
+						return returnedPromise
+					});
+
+					it('checks that current reading is below the threshold and will pass health check', () => {
+						assert.ok(instance.currentReading > instance.threshold);
+					});
+					
+					it('sets the `ok` property to `true`', () => {
+						assert.isTrue(instance.ok);
+					});
+				});
+            });
+
+            describe('for below - when the healthcheck fails `ok` is false', () => {
+
+                beforeEach(() => {
+					instance.ok = true;
+					instance.checkOutput = 'mock output';
+					instance.direction = 'below';
+                    instance.threshold = 301;
+					returnedPromise = instance.run();
+                });
+
+				describe('.then()', () => {
+
+					beforeEach(() => {
+						return returnedPromise
+					});
+
+					it('checks that current reading is above the threshold and will fail health check', () => {
+						assert.ok(instance.currentReading < instance.threshold);
+					})
+					
+					it('sets the `ok` property to `false`', () => {
+						assert.isFalse(instance.ok);
+					});
+
 				});
 
 			});
@@ -212,14 +344,38 @@ describe('lib/check/graphite-threshold', () => {
 		assert.isFunction(GraphiteThresholdCheck.validateOptions);
 	});
 
-	describe('.validateOptions(options)', () => {
+	describe('.validateOptions(options) with direction "below"', () => {
 		let options;
 		let returnValue;
 
 		beforeEach(() => {
 			options = {
 				method: 'MOCK',
-				url: 'mock-url'
+				url: 'mock-url',
+				threshold: 300,
+				direction: 'below',
+				graphiteKey: '2589ngs9fnmockmocki34thynegids0fs'
+			};
+			returnValue = GraphiteThresholdCheck.validateOptions(options);
+		});
+
+		it('returns `true`', () => {
+			assert.isTrue(returnValue);
+		});
+
+	});
+
+	describe('.validateOptions(options) with direction "above"', () => {
+		let options;
+		let returnValue;
+
+		beforeEach(() => {
+			options = {
+				method: 'MOCK',
+				url: 'mock-url',
+				threshold: 300,
+				direction: 'above',
+				graphiteKey: '2589ngs9fnmockmocki34thynegids0fs'
 			};
 			returnValue = GraphiteThresholdCheck.validateOptions(options);
 		});
@@ -257,6 +413,46 @@ describe('lib/check/graphite-threshold', () => {
 				returnValue = GraphiteThresholdCheck.validateOptions(options);
 				assert.instanceOf(returnValue, TypeError);
 				assert.strictEqual(returnValue.message, expectedErrorMessage, 'non-string');
+			});
+
+		});
+
+		describe('when `options` has an invalid `threshold` property', () => {
+
+			it('returns a descriptive error', () => {
+				const expectedErrorMessage = 'You must set a numerical threshold';
+				options.threshold = null;
+				returnValue = GraphiteThresholdCheck.validateOptions(options);
+				assert.instanceOf(returnValue, Error);
+				assert.strictEqual(returnValue.message, expectedErrorMessage, 'invalid threshold');
+			});
+
+		});
+
+		describe('when `options` has an invalid `direction` property', () => {
+
+			it('returns a descriptive error', () => {
+				const expectedErrorMessage = 'You must set whether you want to check "above" or "below" a threshold.';
+				options.direction = 'ab0ve';
+				returnValue = GraphiteThresholdCheck.validateOptions(options);
+				assert.instanceOf(returnValue, Error);
+				assert.strictEqual(returnValue.message, expectedErrorMessage, 'invalid direction');
+				options.direction = 'fgnsgkjsn';
+				returnValue = GraphiteThresholdCheck.validateOptions(options);
+				assert.instanceOf(returnValue, Error);
+				assert.strictEqual(returnValue.message, expectedErrorMessage, 'invalid direction');
+			});
+
+		});
+
+		describe('when `options` has no `graphiteKey` property', () => {
+
+			it('returns a descriptive error', () => {
+				const expectedErrorMessage = 'You must set up your Graphite key in your environment variables.';
+				delete options.graphiteKey;
+				returnValue = GraphiteThresholdCheck.validateOptions(options);
+				assert.instanceOf(returnValue, Error);
+				assert.strictEqual(returnValue.message, expectedErrorMessage, 'set a graphite key');
 			});
 
 		});
