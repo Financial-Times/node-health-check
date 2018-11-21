@@ -100,7 +100,7 @@ describe('lib/check/graphite-threshold', () => {
                 sinon.stub(global, 'Date').returns(mockDate);
                 mockResponse = {
                     body: JSON.stringify([
-                        { "datapoints" : 
+                        { 'datapoints' : 
                             [
                                 [300, 1542293760]
                             ]
@@ -141,7 +141,7 @@ describe('lib/check/graphite-threshold', () => {
 
                 it('receives a response body containing the correct text', () => {
                     console.log(mockResponse);
-                    assert.deepEqual(mockResponse, {body: JSON.stringify([{"datapoints": [[300, 1542293760]]}])}, 'Response does not match set mock response');
+                    assert.deepEqual(mockResponse, {body: JSON.stringify([{'datapoints': [[300, 1542293760]]}])}, 'Response does not match set mock response');
                 });
                 
 				it('sets the `checkOutput` property to an empty string', () => {
@@ -167,7 +167,7 @@ describe('lib/check/graphite-threshold', () => {
 				describe('.then()', () => {
 
 					beforeEach(() => {
-						return returnedPromise
+						return returnedPromise;
 					});
 
 					it('checks that current reading is below the threshold and will pass health check', () => {
@@ -193,12 +193,12 @@ describe('lib/check/graphite-threshold', () => {
 				describe('.then()', () => {
 
 					beforeEach(() => {
-						return returnedPromise
+						return returnedPromise;
 					});
 
 					it('checks that current reading is above the threshold and will fail health check', () => {
 						assert.ok(instance.currentReading > instance.threshold);
-					})
+					});
 					
 					it('sets the `ok` property to `false`', () => {
 						assert.isFalse(instance.ok);
@@ -221,7 +221,7 @@ describe('lib/check/graphite-threshold', () => {
 				describe('.then()', () => {
 
 					beforeEach(() => {
-						return returnedPromise
+						return returnedPromise;
 					});
 
 					it('checks that current reading is below the threshold and will pass health check', () => {
@@ -247,12 +247,12 @@ describe('lib/check/graphite-threshold', () => {
 				describe('.then()', () => {
 
 					beforeEach(() => {
-						return returnedPromise
+						return returnedPromise;
 					});
 
 					it('checks that current reading is above the threshold and will fail health check', () => {
 						assert.ok(instance.currentReading < instance.threshold);
-					})
+					});
 					
 					it('sets the `ok` property to `false`', () => {
 						assert.isFalse(instance.ok);
