@@ -235,8 +235,6 @@ describe('lib/check/graphite-threshold', () => {
 
 			});
 
-			//-------
-
 			describe('for when the JSON response is malformed', () => {
 
                 beforeEach(() => {
@@ -262,8 +260,6 @@ describe('lib/check/graphite-threshold', () => {
 				});
 
 			});
-
-			//---------
 
 			describe('when the request fails', () => {
 				let requestError;
