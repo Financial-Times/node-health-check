@@ -119,7 +119,7 @@ const health = new HealthCheck({
 			threshold: 50,
 			direction: 'below',
 			interval: 300000,
-
+			graphiteKey: FT_GRAPHITE_KEY,
 			// These properties are output in the health
 			// check JSON
 			id: 'envoy-event-queue-check',
@@ -128,7 +128,6 @@ const health = new HealthCheck({
 			businessImpact: 'The number of events in the Envoy queue has dropped below the specified threshold.',
 			technicalSummary: 'This might indicate an issue and should be monitored.',
 			panicGuide: 'Inspect RabbitMQ to see if anything is amiss.'
-
 		}
 
 	]
