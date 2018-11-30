@@ -119,7 +119,9 @@ const health = new HealthCheck({
 			threshold: 50,
 			direction: 'below',
 			interval: 300000,
+			/* eslint-disable */
 			graphiteKey: FT_GRAPHITE_KEY,
+			/* eslint-disable */
 			// These properties are output in the health
 			// check JSON
 			id: 'envoy-event-queue-check',
