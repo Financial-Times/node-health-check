@@ -62,32 +62,6 @@ describe('lib/check/graphite-threshold', () => {
 			assert.calledWithExactly(GraphiteThresholdCheck.assertOptionValidity, options);
 		});
 
-		/////// LOOK AT THIS WITH ROWAN ///////
-
-		// describe('when the threshold is invalid - not a number', () => {
-		// 	let mockError;
-
-		// 	beforeEach(() => {
-		// 		mockError = new Error('You must set a numerical threshold');
-		// 		instance.threshold = null;
-		// 	});
-
-		// 	it('throws a validation error', () => {
-		// 		console.log(instance.threshold);
-		// 		let caughtError;
-		// 		try {
-		// 			GraphiteThresholdCheck.assertOptionValidity(instance.threshold);
-		// 		} catch (error) {
-		// 			console.log('hieeeeeeeee')
-		// 			caughtError = error;
-		// 		}
-		// 		assert.strictEqual(caughtError, mockError);
-		// 	});
-
-		// });
-
-		////////////////////////////////////////////
-
 		describe('.run()', () => {
             let mockDate;
             let returnedPromise;
@@ -140,7 +114,6 @@ describe('lib/check/graphite-threshold', () => {
                 });
 
                 it('receives a response body containing the correct text', () => {
-                    console.log(mockResponse);
                     assert.deepEqual(mockResponse, {body: JSON.stringify([{'datapoints': [[300, 1542293760]]}])}, 'Response does not match set mock response');
                 });
                 
@@ -261,6 +234,36 @@ describe('lib/check/graphite-threshold', () => {
 				});
 
 			});
+
+			//-------
+
+			describe('for when the JSON response is malformed', () => {
+
+                beforeEach(() => {
+					instance.ok = true;
+					mockResponse.body = JSON.stringify([]);
+					returnedPromise = instance.run();
+                });
+
+				describe('.then()', () => {
+
+					beforeEach(() => {
+						return returnedPromise;
+					});
+					
+					it('sets the `ok` property to `false`', () => {
+						assert.isFalse(instance.ok);
+					});
+
+					it('sets the `checkOutput` property to the error message', () => {
+						assert.strictEqual(instance.checkOutput, 'Please check that the URL is in the correct format, as it is not returning properly formatted JSON for this healthcheck.');
+					});
+
+				});
+
+			});
+
+			//---------
 
 			describe('when the request fails', () => {
 				let requestError;
