@@ -120,7 +120,7 @@ const health = new HealthCheck({
 			direction: 'below',
 			interval: 300000,
 			/* eslint-disable */
-			graphiteKey: FT_GRAPHITE_KEY,
+			graphiteKey: process.env.FT_GRAPHITE_KEY,
 			/* eslint-disable */
 			// These properties are output in the health
 			// check JSON
