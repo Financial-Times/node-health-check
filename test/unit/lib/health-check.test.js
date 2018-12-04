@@ -14,6 +14,7 @@ describe('lib/health-check', () => {
 	let MemoryCheck;
 	let PingUrlCheck;
 	let TcpIpCheck;
+	let GraphiteThresholdCheck;
 
 	beforeEach(() => {
 		Check = require('../mock/check.mock');
@@ -33,6 +34,9 @@ describe('lib/health-check', () => {
 
 		TcpIpCheck = require('../mock/tcp-ip-check.mock');
 		mockery.registerMock('./check/tcp-ip', TcpIpCheck);
+
+		GraphiteThresholdCheck = require('../mock/graphite-threshold.mock');
+		mockery.registerMock('./check/graphite-threshold', GraphiteThresholdCheck);
 
 		defaults = sinon.spy(require('lodash/defaults'));
 		mockery.registerMock('lodash/defaults', defaults);
@@ -429,6 +433,7 @@ describe('lib/health-check', () => {
 		assert.strictEqual(HealthCheck.checkTypeMap['memory'], MemoryCheck);
 		assert.strictEqual(HealthCheck.checkTypeMap['ping-url'], PingUrlCheck);
 		assert.strictEqual(HealthCheck.checkTypeMap['tcp-ip'], TcpIpCheck);
+		assert.strictEqual(HealthCheck.checkTypeMap['graphite-threshold'], GraphiteThresholdCheck);
 	});
 
 	it('has a `Check` static property', () => {

@@ -103,6 +103,33 @@ const health = new HealthCheck({
 			businessImpact: 'New files may not be saved',
 			technicalSummary: 'Something went wrong!',
 			panicGuide: 'Don\'t panic'
+		},
+
+		// This check monitors the number of events in the Envoy queue
+		// It will fail if the averge number of events in the Envoy
+		// queue falls below 50 in a 5-minute interval
+		{
+			// These properties are used to configure
+			// the graphite-threshold check
+			type: 'graphite-threshold',
+			// This URL receives data about the average
+			// number of events being processed by the
+			// Envoy task queue over the previous 5 mins
+			url: 'https://graphitev2-api.ft.com/render/?from=-5minutes&target=summarize(internalproducts.heroku.ip-envoy.worker_1.queue.task,%20%225minutes%22,%20%22avg%22,%20true)&format=json',
+			threshold: 50,
+			direction: 'below',
+			interval: 300000,
+			/* eslint-disable */
+			graphiteKey: process.env.FT_GRAPHITE_KEY,
+			/* eslint-disable */
+			// These properties are output in the health
+			// check JSON
+			id: 'envoy-event-queue-check',
+			name: 'Envoy event queue check 💯 👀',
+			severity: 3,
+			businessImpact: 'The number of events in the Envoy queue has dropped below the specified threshold.',
+			technicalSummary: 'This might indicate an issue and should be monitored.',
+			panicGuide: 'Inspect RabbitMQ to see if anything is amiss.'
 		}
 
 	]
