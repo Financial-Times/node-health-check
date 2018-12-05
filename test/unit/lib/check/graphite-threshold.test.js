@@ -419,7 +419,7 @@ describe('lib/check/graphite-threshold', () => {
 		describe('when `options` has an invalid `threshold` property', () => {
 
 			it('returns a descriptive error', () => {
-				const expectedErrorMessage = 'You must set a numerical threshold';
+				const expectedErrorMessage = 'You must set a numerical or null threshold';
 				options.threshold = null;
 				returnValue = GraphiteThresholdCheck.validateOptions(options);
 				assert.instanceOf(returnValue, Error);
