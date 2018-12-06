@@ -420,7 +420,7 @@ describe('lib/check/graphite-threshold', () => {
 
 			it('returns a descriptive error', () => {
 				const expectedErrorMessage = 'You must set a numerical or null threshold';
-				options.threshold = null;
+				options.threshold = 'bananacompleted';
 				returnValue = GraphiteThresholdCheck.validateOptions(options);
 				assert.instanceOf(returnValue, Error);
 				assert.strictEqual(returnValue.message, expectedErrorMessage, 'invalid threshold');
