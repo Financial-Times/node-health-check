@@ -81,6 +81,7 @@ describe('lib/check/ping-url', () => {
 				assert.calledOnce(request);
 				assert.calledWith(request, {
 					uri: 'mock-url',
+					headers: {},
 					method: 'MOCK',
 					resolveWithFullResponse: true,
 					timeout: instance.options.interval
@@ -132,6 +133,7 @@ describe('lib/check/ping-url', () => {
 					assert.calledOnce(request);
 					assert.calledWith(request, {
 						uri: 'mock-url-from-function',
+						headers: {},
 						method: 'MOCK',
 						resolveWithFullResponse: true,
 						timeout: instance.options.interval
@@ -140,6 +142,28 @@ describe('lib/check/ping-url', () => {
 
 			});
 
+			describe('when `options.headers` is an object', () => {
+
+				beforeEach(() => {
+					instance.ok = false;
+					instance.checkOutput = 'mock output';
+					request.reset();
+					instance.options.headers = { key : 'mock' };
+					returnedPromise = instance.run();
+				});
+
+				it('calls `request` with the expected options', () => {
+					assert.calledOnce(request);
+					assert.calledWith(request, {
+						uri: 'mock-url',
+						headers: { key : 'mock' },
+						method: 'MOCK',
+						resolveWithFullResponse: true,
+						timeout: instance.options.interval
+					});
+				});
+
+			});
 			describe('when the request fails', () => {
 				let requestError;
 
@@ -197,6 +221,7 @@ describe('lib/check/ping-url', () => {
 					assert.calledOnce(request);
 					assert.calledWith(request, {
 						uri: 'mock-url',
+						headers: {},
 						method: 'HEAD',
 						resolveWithFullResponse: true,
 						timeout: instance.options.interval
@@ -279,6 +304,22 @@ describe('lib/check/ping-url', () => {
 
 			it('returns `true`', () => {
 				assert.isTrue(returnValue);
+			});
+
+		});
+		
+		describe('when `options` has an invalid `headers` property', () => {
+
+			it('returns a descriptive error', () => {
+				const expectedErrorMessage = 'Invalid option: headers must be an object';
+				options.headers = '';
+				returnValue = PingUrlCheck.validateOptions(options);
+				assert.instanceOf(returnValue, TypeError);
+				assert.strictEqual(returnValue.message, expectedErrorMessage, 'empty string');
+				options.headers = 123;
+				returnValue = PingUrlCheck.validateOptions(options);
+				assert.instanceOf(returnValue, TypeError);
+				assert.strictEqual(returnValue.message, expectedErrorMessage, 'non-string');
 			});
 
 		});

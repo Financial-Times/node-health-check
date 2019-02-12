@@ -167,6 +167,7 @@ The `ping-url` type requires some additional configuration:
 
   - `url`: The URL that the check should ping. This accepts a string or a function that returns a string
   - `method`: The HTTP method to use when pinging the URL. Defaults to `"HEAD"`
+  - `headers`: The HTTP headers to be sent with the request. This accepts an object with key value pair. Defaults to empty object
 
 #### Check Type: TCP/IP
 
