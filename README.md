@@ -60,7 +60,7 @@ Assuming you've already included [Express] and [Express Web Service]:
 
 ```js
 app.use(expressWebService({
-    healthCheck: health.check()
+    healthCheck: health.checks()
 }));
 ```
 
