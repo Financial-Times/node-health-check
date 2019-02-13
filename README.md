@@ -197,12 +197,14 @@ You can find example implementations of health checks in the `examples` folder o
     ```sh
     node examples/basic
     ```
+    [Source File](https://github.com/Financial-Times/node-health-check/blob/examples-links/example/basic/index.js)
 
   - **Custom:** create and run some custom health checks:
 
     ```sh
     node examples/custom
     ```
+    [Source File](https://github.com/Financial-Times/node-health-check/blob/examples-links/example/custom/index.js)
 
 
 Contributing
