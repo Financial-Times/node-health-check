@@ -197,14 +197,14 @@ You can find example implementations of health checks in the `examples` folder o
     ```sh
     node examples/basic
     ```
-    [Source File](https://github.com/Financial-Times/node-health-check/blob/examples-links/example/basic/index.js)
+    [Source File][example-basic]
 
   - **Custom:** create and run some custom health checks:
 
     ```sh
     node examples/custom
     ```
-    [Source File](https://github.com/Financial-Times/node-health-check/blob/examples-links/example/custom/index.js)
+    [Source File][example-custom]
 
 
 Contributing
@@ -248,3 +248,5 @@ This software is published by the Financial Times under the [MIT licence][licens
 [npm]: https://www.npmjs.com/
 [origami support]: mailto:origami-support@ft.com
 [promises]: https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Promise
+[example-basic]: https://github.com/Financial-Times/node-health-check/blob/master/example/basic/index.js)
+[example-custom]: https://github.com/Financial-Times/node-health-check/blob/master/example/custom/index.js
