@@ -248,5 +248,5 @@ This software is published by the Financial Times under the [MIT licence][licens
 [npm]: https://www.npmjs.com/
 [origami support]: mailto:origami-support@ft.com
 [promises]: https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Promise
-[example-basic]: https://github.com/Financial-Times/node-health-check/blob/master/example/basic/index.js)
+[example-basic]: https://github.com/Financial-Times/node-health-check/blob/master/example/basic/index.js
 [example-custom]: https://github.com/Financial-Times/node-health-check/blob/master/example/custom/index.js
