@@ -21,7 +21,7 @@
     "test": "make verify test"
   },
   "dependencies": {
-    "diskusage": "^0.2.1",
+    "diskfree": "^1.1.0",
     "lodash": "^4.17.2",
     "request": "^2.83.0",
     "request-promise-native": "^1.0.5",
