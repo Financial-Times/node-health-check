@@ -129,7 +129,8 @@ describe('lib/check', () => {
 			let boundRun;
 
 			beforeEach(() => {
-				intervalId = 'mock-interval-id';
+				intervalId = {};
+				intervalId.unref = sinon.spy();
 				sinon.stub(global, 'setInterval').returns(intervalId);
 				sinon.stub(instance, 'isRunning').returns(false);
 				boundRun = sinon.spy();
@@ -144,6 +145,10 @@ describe('lib/check', () => {
 
 			it('calls the `run` method', () => {
 				assert.calledOnce(instance.run);
+			});
+			
+			it('calls the `unref` method on the interval', () => {
+				assert.calledOnce(intervalId.unref);
 			});
 
 			it('Sets an interval with `options.interval` and a bound version of the `run` method', () => {
@@ -180,7 +185,7 @@ describe('lib/check', () => {
 
 			beforeEach(() => {
 				sinon.stub(instance, 'isRunning').returns(true);
-				instance._interval = intervalId = 'mock-interval-id';
+				instance._interval = intervalId = {};
 				sinon.stub(global, 'clearInterval');
 				instance.stop();
 			});

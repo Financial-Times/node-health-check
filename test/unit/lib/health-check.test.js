@@ -4,7 +4,9 @@ const assert = require('proclaim');
 const mockery = require('mockery');
 const sinon = require('sinon');
 
-describe('lib/health-check', () => {
+describe('lib/health-check', function () {
+	this.timeout(10000);
+
 	let Check;
 	let CpuCheck;
 	let defaults;
