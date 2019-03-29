@@ -45,7 +45,6 @@ jobs:
     docker:
       - image: circleci/node:latest
     steps:
-      steps:
       - checkout
       - run:
           name: Authenticate with npm
