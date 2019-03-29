@@ -9,7 +9,7 @@ jobs:
       - image: circleci/node:8
     steps:
       - checkout
-      - run: npm ci
+      - run: sudo npm i -g npm && npm ci
       - run: make verify
       - run: make test
 
@@ -18,7 +18,7 @@ jobs:
       - image: circleci/node:9
     steps:
       - checkout
-      - run: npm ci
+      - run: sudo npm i -g npm && npm ci
       - run: make verify
       - run: make test
 
@@ -27,7 +27,7 @@ jobs:
       - image: circleci/node:10
     steps:
       - checkout
-      - run: npm ci
+      - run: sudo npm i -g npm && npm ci
       - run: make verify
       - run: make test
 
@@ -36,7 +36,7 @@ jobs:
       - image: circleci/node:11
     steps:
       - checkout
-      - run: npm ci
+      - run: sudo npm i -g npm && npm ci
       - run: make verify
       - run: make test
 
