@@ -12,6 +12,7 @@ jobs:
       - run: npm ci
       - run: make verify
       - run: make test
+
   test-node-9:
     docker:
       - image: circleci/node:9
@@ -20,6 +21,7 @@ jobs:
       - run: npm ci
       - run: make verify
       - run: make test
+
   test-node-10:
     docker:
       - image: circleci/node:10
@@ -28,6 +30,7 @@ jobs:
       - run: npm ci
       - run: make verify
       - run: make test
+
   test-node-11:
     docker:
       - image: circleci/node:11
