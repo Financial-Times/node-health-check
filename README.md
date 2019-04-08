@@ -215,24 +215,30 @@ There is a work-around this is to implement. This would be to either put in a `r
 
 ```js
 class MyHealthCheck extends HealthCheck.Check {
+	async run() {
+		try {
+			const response = await fetch('https://some.api-address.com', {
+				method: 'GET',
+				headers: {
+					'apikey': 'your api key here'
+				}
+			});
 
-    constructor(options) {
-        super(options);
-    }
+			if (response.status !== 200) {
+				throw new Error('Unable to access API');
+			}
 
-    // Must return a promise
-    run() {
-        return new Promise(resolve => {
-            // Must set these properties
-            this.ok = true;
-            this.checkOutput = '';
-            this.lastUpdated = new Date();
-            // Read the body so that it can be garbage-collected
-            response.text();
-            resolve();
-        });
-    }
+			if (response.status === 200) {
+				this.ok = true;
+				this.checkOutput = 'OK';
+				response.text(); // read the body so it can be garbage collected
+			}
 
+		} catch (error) {
+			this.ok = false;
+			this.checkOutput = error.toString();
+		}
+	}
 }
 ```
 
