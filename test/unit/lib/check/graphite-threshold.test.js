@@ -42,10 +42,10 @@ describe('lib/check/graphite-threshold', () => {
 				name: 'mock name',
 				panicGuide: 'mock panic guide',
 				technicalSummary: 'mock technical summary',
-                url: 'mock-url',
-                threshold: 300,
-                direction: 'above',
-                graphiteKey: 'mock key'
+					url: 'mock-url',
+					threshold: 300,
+					direction: 'above',
+					graphiteKey: 'mock key'
 			};
 			sinon.stub(GraphiteThresholdCheck, 'assertOptionValidity');
 			startMock = sinon.stub(GraphiteThresholdCheck.prototype, 'start');
@@ -63,26 +63,26 @@ describe('lib/check/graphite-threshold', () => {
 		});
 
 		describe('.run()', () => {
-            let mockDate;
-            let returnedPromise;
-            let mockResponse;
+			let mockDate;
+			let returnedPromise;
+			let mockResponse;
 
 			beforeEach(() => {
 				mockDate = {
 					mock: true
 				};
-                sinon.stub(global, 'Date').returns(mockDate);
-                mockResponse = {
-                    body: JSON.stringify([
-                        { 'datapoints' : 
-                            [
-                                [300, 1542293760]
-                            ]
-                        }
-                    ])
+				sinon.stub(global, 'Date').returns(mockDate);
+				mockResponse = {
+					body: JSON.stringify([
+						{ 'datapoints' :
+							[
+								[300, 1542293760]
+							]
+						}
+					])
 				};
-                request.resolves(mockResponse);
-                instance.currentReading = '';
+				request.resolves(mockResponse);
+				instance.currentReading = '';
 				instance.ok = false;
 				instance.checkOutput = 'mock output';
 				returnedPromise = instance.run();
@@ -98,8 +98,8 @@ describe('lib/check/graphite-threshold', () => {
 					uri: 'mock-url',
 					method: 'MOCK',
 					resolveWithFullResponse: true,
-                    timeout: instance.options.interval,
-                    headers: { key: instance.options.graphiteKey }
+					timeout: instance.options.interval,
+					headers: { key: instance.options.graphiteKey }
 				});
 			});
 
@@ -109,14 +109,14 @@ describe('lib/check/graphite-threshold', () => {
 
 			describe('.then()', () => {
 
-                it('receives a response body', () => {
-                    assert.isObject(mockResponse);
-                });
+				it('receives a response body', () => {
+					assert.isObject(mockResponse);
+				});
 
-                it('receives a response body containing the correct text', () => {
-                    assert.deepEqual(mockResponse, {body: JSON.stringify([{'datapoints': [[300, 1542293760]]}])}, 'Response does not match set mock response');
-                });
-                
+				it('receives a response body containing the correct text', () => {
+					assert.deepEqual(mockResponse, {body: JSON.stringify([{'datapoints': [[300, 1542293760]]}])}, 'Response does not match set mock response');
+				});
+
 				it('sets the `checkOutput` property to an empty string', () => {
 					assert.strictEqual(instance.checkOutput, '');
 				});
@@ -126,17 +126,17 @@ describe('lib/check/graphite-threshold', () => {
 				});
 
 			});
-            
-            describe('for above - when the healthcheck passes `ok` is true', () => {
 
-                beforeEach(() => {
+			describe('for above - when the healthcheck passes `ok` is true', () => {
+
+				beforeEach(() => {
 					instance.ok = false;
 					instance.direction = 'above';
-                    instance.checkOutput = 'mock output';
-                    instance.threshold = 301;
+					instance.checkOutput = 'mock output';
+					instance.threshold = 301;
 					returnedPromise = instance.run();
 				});
-				
+
 				describe('.then()', () => {
 
 					beforeEach(() => {
@@ -146,22 +146,22 @@ describe('lib/check/graphite-threshold', () => {
 					it('checks that current reading is below the threshold and will pass health check', () => {
 						assert.ok(instance.currentReading < instance.threshold);
 					});
-					
+
 					it('sets the `ok` property to `true`', () => {
 						assert.isTrue(instance.ok);
 					});
 				});
-            });
+			});
 
-            describe('for above - when the healthcheck fails `ok` is false', () => {
+			describe('for above - when the healthcheck fails `ok` is false', () => {
 
-                beforeEach(() => {
+				beforeEach(() => {
 					instance.ok = true;
 					instance.direction = 'above';
-                    instance.checkOutput = 'mock output';
-                    instance.threshold = 299;
+					instance.checkOutput = 'mock output';
+					instance.threshold = 299;
 					returnedPromise = instance.run();
-                });
+				});
 
 				describe('.then()', () => {
 
@@ -172,7 +172,7 @@ describe('lib/check/graphite-threshold', () => {
 					it('checks that current reading is above the threshold and will fail health check', () => {
 						assert.ok(instance.currentReading > instance.threshold);
 					});
-					
+
 					it('sets the `ok` property to `false`', () => {
 						assert.isFalse(instance.ok);
 					});
@@ -183,14 +183,14 @@ describe('lib/check/graphite-threshold', () => {
 
 			describe('for below - when the healthcheck passes `ok` is true', () => {
 
-                beforeEach(() => {
+				beforeEach(() => {
 					instance.ok = false;
 					instance.checkOutput = 'mock output';
 					instance.direction = 'below';
-                    instance.threshold = 299;
+					instance.threshold = 299;
 					returnedPromise = instance.run();
 				});
-				
+
 				describe('.then()', () => {
 
 					beforeEach(() => {
@@ -200,22 +200,22 @@ describe('lib/check/graphite-threshold', () => {
 					it('checks that current reading is below the threshold and will pass health check', () => {
 						assert.ok(instance.currentReading > instance.threshold);
 					});
-					
+
 					it('sets the `ok` property to `true`', () => {
 						assert.isTrue(instance.ok);
 					});
 				});
-            });
+			});
 
-            describe('for below - when the healthcheck fails `ok` is false', () => {
+			describe('for below - when the healthcheck fails `ok` is false', () => {
 
-                beforeEach(() => {
+				beforeEach(() => {
 					instance.ok = true;
 					instance.checkOutput = 'mock output';
 					instance.direction = 'below';
-                    instance.threshold = 301;
+					instance.threshold = 301;
 					returnedPromise = instance.run();
-                });
+				});
 
 				describe('.then()', () => {
 
@@ -226,7 +226,7 @@ describe('lib/check/graphite-threshold', () => {
 					it('checks that current reading is above the threshold and will fail health check', () => {
 						assert.ok(instance.currentReading < instance.threshold);
 					});
-					
+
 					it('sets the `ok` property to `false`', () => {
 						assert.isFalse(instance.ok);
 					});
@@ -237,18 +237,18 @@ describe('lib/check/graphite-threshold', () => {
 
 			describe('for when the JSON response is malformed', () => {
 
-                beforeEach(() => {
+				beforeEach(() => {
 					instance.ok = true;
-					mockResponse.body = JSON.stringify([]);
+					mockResponse.body = JSON.stringify([{}]);
 					returnedPromise = instance.run();
-                });
+				});
 
 				describe('.then()', () => {
 
 					beforeEach(() => {
 						return returnedPromise;
 					});
-					
+
 					it('sets the `ok` property to `false`', () => {
 						assert.isFalse(instance.ok);
 					});
@@ -320,8 +320,8 @@ describe('lib/check/graphite-threshold', () => {
 						uri: 'mock-url',
 						method: 'GET',
 						resolveWithFullResponse: true,
-                        timeout: instance.options.interval,
-                        headers: { key: instance.options.graphiteKey }
+						timeout: instance.options.interval,
+						headers: { key: instance.options.graphiteKey }
 					});
 				});
 
