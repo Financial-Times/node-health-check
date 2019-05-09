@@ -214,6 +214,8 @@ If a project is using `node-fetch` as a npm dependency, there is a potential got
 There is a work-around this is to implement. This would be to either put in a `response.json` or a `response.text` in the custom healthcheck like below:
 
 ```js
+const fetch = require('node-fetch');
+
 class MyHealthCheck extends HealthCheck.Check {
 	async run() {
 		try {
