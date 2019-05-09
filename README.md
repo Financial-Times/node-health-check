@@ -13,6 +13,7 @@ Table Of Contents
     - [Options](#options)
     - [Health Check Configurations](#health-check-configurations)
     - [Examples](#examples)
+    - [Node Fetch](#node-fetch)
   - [Contributing](#contributing)
   - [Publishing](#publishing)
   - [Contact](#contact)
@@ -206,6 +207,42 @@ You can find example implementations of health checks in the `examples` folder o
     ```
     [Source File][example-custom]
 
+### Node Fetch
+
+If a project is using `node-fetch` as a npm dependency, there is a potential gotcha to be aware of, as without having a `response` for a custom healthcheck in the body, it will introduce a memory leak that will build up over time and crash the app due to not having a `response` in place.
+
+There is a work-around this is to implement. This would be to either put in a `response.json` or a `response.text` in the custom healthcheck like below:
+
+```js
+const fetch = require('node-fetch');
+
+class MyHealthCheck extends HealthCheck.Check {
+	async run() {
+		try {
+			const response = await fetch('https://some.api-address.com', {
+				method: 'GET',
+				headers: {
+					'apikey': 'your api key here'
+				}
+			});
+
+			if (response.status !== 200) {
+				throw new Error('Unable to access API');
+			}
+
+			if (response.status === 200) {
+				this.ok = true;
+				this.checkOutput = 'OK';
+				response.text(); // read the body so it can be garbage collected
+			}
+
+		} catch (error) {
+			this.ok = false;
+			this.checkOutput = error.toString();
+		}
+	}
+}
+```
 
 Contributing
 ------------
