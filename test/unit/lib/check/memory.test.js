@@ -8,15 +8,18 @@ describe('lib/check/memory', () => {
 	let Check;
 	let log;
 	let MemoryCheck;
-	let usage;
+	let pidusage;
+	let os;
 
 	beforeEach(() => {
 		Check = require('../../../../lib/check');
 
 		log = require('../../mock/log.mock');
 
-		usage = require('../../mock/usage.mock');
-		mockery.registerMock('usage', usage);
+		pidusage = require('../../mock/pidusage.mock');
+		os = require('../../mock/os.mock');
+		mockery.registerMock('pidusage', pidusage);
+		mockery.registerMock('os', os);
 
 		MemoryCheck = require('../../../../lib/check/memory');
 	});
@@ -76,9 +79,9 @@ describe('lib/check/memory', () => {
 				Date.restore();
 			});
 
-			it('calls `usage.lookup` with the process ID', () => {
-				assert.calledOnce(usage.lookup);
-				assert.calledWith(usage.lookup, process.pid);
+			it('calls `pidusage` with the process ID', () => {
+				assert.calledOnce(pidusage);
+				assert.calledWith(pidusage, process.pid);
 			});
 
 			it('returns a promise', () => {
@@ -103,7 +106,7 @@ describe('lib/check/memory', () => {
 				});
 
 				it('sets the `checkOutput` property to the percentage memory usage', () => {
-					const expectedPercentage = (usage.mockUsage.memory / usage.mockUsage.memoryInfo.vsize) * 100;
+					const expectedPercentage = (pidusage.mockPidusage.memory / os.totalmem()) * 100;
 					assert.strictEqual(instance.checkOutput, `${expectedPercentage}% used`);
 				});
 
@@ -116,10 +119,10 @@ describe('lib/check/memory', () => {
 			describe('when the usage is above `threshold` percent', () => {
 
 				beforeEach(() => {
-					usage.mockUsage.memory = 1900000000;
+					pidusage.mockPidusage.memory = 1900000000;
 					instance.ok = true;
 					instance.checkOutput = '';
-					usage.lookup.reset();
+					pidusage.reset();
 					returnedPromise = instance.run();
 				});
 
@@ -141,7 +144,7 @@ describe('lib/check/memory', () => {
 					});
 
 					it('sets the `checkOutput` property to the percentage memory usage', () => {
-						const expectedPercentage = (usage.mockUsage.memory / usage.mockUsage.memoryInfo.vsize) * 100;
+						const expectedPercentage = (pidusage.mockPidusage.memory / os.totalmem()) * 100;
 						assert.strictEqual(instance.checkOutput, `${expectedPercentage}% used`);
 					});
 
@@ -150,7 +153,7 @@ describe('lib/check/memory', () => {
 					});
 
 					it('logs that the usage failed', () => {
-						const expectedPercentage = (usage.mockUsage.memory / usage.mockUsage.memoryInfo.vsize) * 100;
+						const expectedPercentage = (pidusage.mockPidusage.memory / os.totalmem()) * 100;
 						assert.calledWithExactly(log.error, `Health check "mock name" failed: ${expectedPercentage}% used`);
 					});
 
@@ -159,14 +162,14 @@ describe('lib/check/memory', () => {
 			});
 
 			describe('when the usage check errors', () => {
-				let usageError;
+				let pidusageError;
 
 				beforeEach(() => {
 					instance.ok = true;
 					instance.checkOutput = '';
-					usageError = new Error('usage error');
-					usage.lookup.reset();
-					usage.lookup.yieldsAsync(usageError);
+					pidusageError = new Error('pidusage error');
+					pidusage.reset();
+					pidusage.yieldsAsync(pidusageError);
 					returnedPromise = instance.run();
 				});
 
@@ -188,7 +191,7 @@ describe('lib/check/memory', () => {
 					});
 
 					it('sets the `checkOutput` property to the error message', () => {
-						assert.strictEqual(instance.checkOutput, 'usage error');
+						assert.strictEqual(instance.checkOutput, 'pidusage error');
 					});
 
 					it('updates the `lastUpdated` property', () => {
@@ -196,7 +199,7 @@ describe('lib/check/memory', () => {
 					});
 
 					it('logs that the usage failed', () => {
-						assert.calledWithExactly(log.error, 'Health check "mock name" failed: usage error');
+						assert.calledWithExactly(log.error, 'Health check "mock name" failed: pidusage error');
 					});
 
 				});
