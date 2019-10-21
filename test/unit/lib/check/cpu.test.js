@@ -8,15 +8,15 @@ describe('lib/check/cpu', () => {
 	let Check;
 	let log;
 	let CpuCheck;
-	let usage;
+	let pidusage;
 
 	beforeEach(() => {
 		Check = require('../../../../lib/check');
 
 		log = require('../../mock/log.mock');
 
-		usage = require('../../mock/usage.mock');
-		mockery.registerMock('usage', usage);
+		pidusage = require('../../mock/pidusage.mock');
+		mockery.registerMock('pidusage', pidusage);
 
 		CpuCheck = require('../../../../lib/check/cpu');
 	});
@@ -76,9 +76,9 @@ describe('lib/check/cpu', () => {
 				Date.restore();
 			});
 
-			it('calls `usage.lookup` with the process ID', () => {
-				assert.calledOnce(usage.lookup);
-				assert.calledWith(usage.lookup, process.pid, {keepHistory: true});
+			it('calls `pidusage` with the process ID', () => {
+				assert.calledOnce(pidusage);
+				assert.calledWith(pidusage, process.pid);
 			});
 
 			it('returns a promise', () => {
@@ -103,7 +103,7 @@ describe('lib/check/cpu', () => {
 				});
 
 				it('sets the `checkOutput` property to the percentage CPU usage', () => {
-					assert.strictEqual(instance.checkOutput, `${usage.mockUsage.cpu}% used`);
+					assert.strictEqual(instance.checkOutput, `${pidusage.mockPidusage.cpu}% used`);
 				});
 
 				it('updates the `lastUpdated` property', () => {
@@ -115,11 +115,11 @@ describe('lib/check/cpu', () => {
 			describe('when the usage is above `threshold` percent', () => {
 
 				beforeEach(() => {
-					usage.mockUsage.cpu = 75;
+					pidusage.mockPidusage.cpu = 75;
 					instance.ok = true;
 					instance.checkOutput = '';
 					instance.hasRun = true;
-					usage.lookup.reset();
+					pidusage.reset();
 					returnedPromise = instance.run();
 				});
 
@@ -141,7 +141,7 @@ describe('lib/check/cpu', () => {
 					});
 
 					it('sets the `checkOutput` property to the percentage CPU usage', () => {
-						assert.strictEqual(instance.checkOutput, `${usage.mockUsage.cpu}% used`);
+						assert.strictEqual(instance.checkOutput, `${pidusage.mockPidusage.cpu}% used`);
 					});
 
 					it('updates the `lastUpdated` property', () => {
@@ -149,7 +149,7 @@ describe('lib/check/cpu', () => {
 					});
 
 					it('logs that the usage failed', () => {
-						assert.calledWithExactly(log.error, `Health check "mock name" failed: ${usage.mockUsage.cpu}% used`);
+						assert.calledWithExactly(log.error, `Health check "mock name" failed: ${pidusage.mockPidusage.cpu}% used`);
 					});
 
 				});
@@ -159,11 +159,11 @@ describe('lib/check/cpu', () => {
 			describe('when the usage is above `threshold` percent but this is the first run', () => {
 
 				beforeEach(() => {
-					usage.mockUsage.cpu = 75;
+					pidusage.mockPidusage.cpu = 75;
 					instance.ok = false;
 					instance.checkOutput = 'mock output';
 					delete instance.hasRun;
-					usage.lookup.reset();
+					pidusage.reset();
 					returnedPromise = instance.run();
 				});
 
@@ -185,7 +185,7 @@ describe('lib/check/cpu', () => {
 					});
 
 					it('sets the `checkOutput` property to the percentage CPU usage', () => {
-						assert.strictEqual(instance.checkOutput, `${usage.mockUsage.cpu}% used`);
+						assert.strictEqual(instance.checkOutput, `${pidusage.mockPidusage.cpu}% used`);
 					});
 
 					it('updates the `lastUpdated` property', () => {
@@ -201,14 +201,14 @@ describe('lib/check/cpu', () => {
 			});
 
 			describe('when the usage check errors', () => {
-				let usageError;
+				let pidusageError;
 
 				beforeEach(() => {
 					instance.ok = true;
 					instance.checkOutput = '';
-					usageError = new Error('usage error');
-					usage.lookup.reset();
-					usage.lookup.yieldsAsync(usageError);
+					pidusageError = new Error('pidusage error');
+					pidusage.reset();
+					pidusage.yieldsAsync(pidusageError);
 					returnedPromise = instance.run();
 				});
 
@@ -230,7 +230,7 @@ describe('lib/check/cpu', () => {
 					});
 
 					it('sets the `checkOutput` property to the error message', () => {
-						assert.strictEqual(instance.checkOutput, 'usage error');
+						assert.strictEqual(instance.checkOutput, 'pidusage error');
 					});
 
 					it('updates the `lastUpdated` property', () => {
@@ -238,7 +238,7 @@ describe('lib/check/cpu', () => {
 					});
 
 					it('logs that the usage failed', () => {
-						assert.calledWithExactly(log.error, 'Health check "mock name" failed: usage error');
+						assert.calledWithExactly(log.error, 'Health check "mock name" failed: pidusage error');
 					});
 
 				});
