@@ -18,14 +18,17 @@
   },
   "main": "./lib/health-check.js",
   "scripts": {
-    "test": "make verify test"
+    "test": "make verify test",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "dependencies": {
     "diskusage": "^1.1.3",
     "lodash": "^4.17.2",
     "pidusage": "^2.0.17",
     "request": "^2.83.0",
-    "request-promise-native": "^1.0.5"
+    "request-promise-native": "^1.0.5",
+    "snyk": "^1.319.1"
   },
   "devDependencies": {
     "@financial-times/origami-service-makefile": "^6.0.1",
@@ -44,5 +47,6 @@
       "example",
       "test"
     ]
-  }
+  },
+  "snyk": true
 }
