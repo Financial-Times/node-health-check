@@ -13,8 +13,8 @@
     "url": "https://github.com/Financial-Times/node-health-check.git"
   },
   "engines": {
-    "node": ">=6",
-    "npm": ">=4"
+    "node": ">=10",
+    "npm": ">=5"
   },
   "main": "./lib/health-check.js",
   "scripts": {

@@ -1,11 +1,8 @@
-
-Node Health Check [![NPM version](https://img.shields.io/npm/v/@financial-times/health-check.svg)](https://www.npmjs.com/package/@financial-times/health-check) [![Build status](https://img.shields.io/circleci/project/Financial-Times/node-health-check.svg)](https://circleci.com/gh/Financial-Times/node-health-check) [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](#license)
-=================
+# Node Health Check [![NPM version](https://img.shields.io/npm/v/@financial-times/health-check.svg)](https://www.npmjs.com/package/@financial-times/health-check) [![Build status](https://img.shields.io/circleci/project/Financial-Times/node-health-check.svg)](https://circleci.com/gh/Financial-Times/node-health-check) [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](#license)
 
 Build health check functions which comply with the [FT health check standard].
 
-Table Of Contents
------------------
+## Table Of Contents
 
   - [Usage](#usage)
     - [Requirements](#requirements)
@@ -16,16 +13,16 @@ Table Of Contents
     - [Node Fetch](#node-fetch)
   - [Contributing](#contributing)
   - [Publishing](#publishing)
+  - [Migration guide](#migration-guide)
   - [Contact](#contact)
   - [Licence](#licence)
 
 
-Usage
------
+## Usage
 
 ### Requirements
 
-Running the Health Check module requires [Node.js] 6.x and [npm]. You can install with:
+Running the Health Check module requires [Node.js] 10.x and [npm]. You can install with:
 
 ```sh
 npm install @financial-times/health-check
@@ -244,8 +241,7 @@ class MyHealthCheck extends HealthCheck.Check {
 }
 ```
 
-Contributing
-------------
+## Contributing
 
 This module has a full suite of unit tests, and is verified with ESLint. You can use the following commands to check your code before opening a pull request.
 
@@ -255,20 +251,25 @@ make test    # run the unit tests and check coverage
 ```
 
 
-Publishing
-----------
+## Publishing
 
 New versions of the module are published automatically by CI when a new tag is created matching the pattern `/v.*/`.
 
 
-Contact
--------
+## Migration guide
+
+State | Major Version | Last Minor Release | Migration guide |
+:---: | :---: | :---: | :---:
+✨ active | 2 | N/A | [migrate to v2](MIGRATION.md#migrating-from-v1-to-v2) |
+⚠ maintained | 1 | 1.11 | N/A |
+
+
+## Contact
 
 If you have any questions or comments about this module, or need help using it, please either [raise an issue][issues], visit [#origami-support] or email [Origami Support].
 
 
-Licence
--------
+## Licence
 
 This software is published by the Financial Times under the [MIT licence][license].
 
