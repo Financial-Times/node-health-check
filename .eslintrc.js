@@ -5,9 +5,6 @@ module.exports = {
 		'node': true,
 		'es6': true
 	},
-	'ecmaFeatures': {
-		'modules': false
-	},
 	'rules': {
 		'no-unused-vars': 2,
 		'no-undef': 2,
