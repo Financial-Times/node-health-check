@@ -8,15 +8,15 @@ describe('lib/check/ping-url', () => {
 	let Check;
 	let log;
 	let PingUrlCheck;
-	let request;
+	let axios;
 
 	beforeEach(() => {
 		Check = require('../../../../lib/check');
 
 		log = require('../../mock/log.mock');
 
-		request = require('../../mock/request-promise-native.mock');
-		mockery.registerMock('request-promise-native', request);
+		axios = require('../../mock/axios.mock');
+		mockery.registerMock('axios', axios);
 
 		PingUrlCheck = require('../../../../lib/check/ping-url');
 	});
@@ -77,13 +77,12 @@ describe('lib/check/ping-url', () => {
 				Date.restore();
 			});
 
-			it('calls `request` with the expected options', () => {
-				assert.calledOnce(request);
-				assert.calledWith(request, {
-					uri: 'mock-url',
+			it('calls `axios` with the expected options', () => {
+				assert.calledOnce(axios);
+				assert.calledWith(axios, {
+					url: 'mock-url',
 					headers: {},
 					method: 'MOCK',
-					resolveWithFullResponse: true,
 					timeout: instance.options.interval
 				});
 			});
@@ -124,18 +123,17 @@ describe('lib/check/ping-url', () => {
 				beforeEach(() => {
 					instance.ok = false;
 					instance.checkOutput = 'mock output';
-					request.reset();
+					axios.reset();
 					instance.options.url = () => 'mock-url-from-function';
 					returnedPromise = instance.run();
 				});
 
-				it('calls `request` with the expected options', () => {
-					assert.calledOnce(request);
-					assert.calledWith(request, {
-						uri: 'mock-url-from-function',
+				it('calls `axios` with the expected options', () => {
+					assert.calledOnce(axios);
+					assert.calledWith(axios, {
+						url: 'mock-url-from-function',
 						headers: {},
 						method: 'MOCK',
-						resolveWithFullResponse: true,
 						timeout: instance.options.interval
 					});
 				});
@@ -147,18 +145,17 @@ describe('lib/check/ping-url', () => {
 				beforeEach(() => {
 					instance.ok = false;
 					instance.checkOutput = 'mock output';
-					request.reset();
+					axios.reset();
 					instance.options.headers = { key : 'mock' };
 					returnedPromise = instance.run();
 				});
 
-				it('calls `request` with the expected options', () => {
-					assert.calledOnce(request);
-					assert.calledWith(request, {
-						uri: 'mock-url',
+				it('calls `axios` with the expected options', () => {
+					assert.calledOnce(axios);
+					assert.calledWith(axios, {
+						url: 'mock-url',
 						headers: { key : 'mock' },
 						method: 'MOCK',
-						resolveWithFullResponse: true,
 						timeout: instance.options.interval
 					});
 				});
@@ -171,8 +168,8 @@ describe('lib/check/ping-url', () => {
 					instance.ok = true;
 					instance.checkOutput = '';
 					requestError = new Error('request error');
-					request.reset();
-					request.rejects(requestError);
+					axios.reset();
+					axios.rejects(requestError);
 					returnedPromise = instance.run();
 				});
 
@@ -212,18 +209,17 @@ describe('lib/check/ping-url', () => {
 			describe('when no `method` option was specified', () => {
 
 				beforeEach(() => {
-					request.reset();
+					axios.reset();
 					delete instance.options.method;
 					returnedPromise = instance.run();
 				});
 
 				it('defaults to "HEAD"', () => {
-					assert.calledOnce(request);
-					assert.calledWith(request, {
-						uri: 'mock-url',
+					assert.calledOnce(axios);
+					assert.calledWith(axios, {
+						url: 'mock-url',
 						headers: {},
 						method: 'HEAD',
-						resolveWithFullResponse: true,
 						timeout: instance.options.interval
 					});
 				});
