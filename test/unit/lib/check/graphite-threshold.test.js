@@ -8,15 +8,15 @@ describe('lib/check/graphite-threshold', () => {
 	let Check;
 	let log;
 	let GraphiteThresholdCheck;
-	let request;
+	let axios;
 
 	beforeEach(() => {
 		Check = require('../../../../lib/check');
 
 		log = require('../../mock/log.mock');
 
-		request = require('../../mock/request-promise-native.mock');
-		mockery.registerMock('request-promise-native', request);
+		axios = require('../../mock/axios.mock');
+		mockery.registerMock('axios', axios);
 
 		GraphiteThresholdCheck = require('../../../../lib/check/graphite-threshold');
 	});
@@ -81,7 +81,7 @@ describe('lib/check/graphite-threshold', () => {
 						}
 					])
 				};
-				request.resolves(mockResponse);
+				axios.resolves(mockResponse);
 				instance.currentReading = '';
 				instance.ok = false;
 				instance.checkOutput = 'mock output';
@@ -92,12 +92,11 @@ describe('lib/check/graphite-threshold', () => {
 				Date.restore();
 			});
 
-			it('calls `request` with the expected options', () => {
-				assert.calledOnce(request);
-				assert.calledWith(request, {
-					uri: 'mock-url',
+			it('calls `axios` with the expected options', () => {
+				assert.calledOnce(axios);
+				assert.calledWith(axios, {
+					url: 'mock-url',
 					method: 'MOCK',
-					resolveWithFullResponse: true,
 					timeout: instance.options.interval,
 					headers: { key: instance.options.graphiteKey }
 				});
@@ -268,8 +267,8 @@ describe('lib/check/graphite-threshold', () => {
 					instance.ok = true;
 					instance.checkOutput = '';
 					requestError = new Error('request error');
-					request.reset();
-					request.rejects(requestError);
+					axios.reset();
+					axios.rejects(requestError);
 					returnedPromise = instance.run();
 				});
 
@@ -309,17 +308,16 @@ describe('lib/check/graphite-threshold', () => {
 			describe('when no `method` option was specified', () => {
 
 				beforeEach(() => {
-					request.reset();
+					axios.reset();
 					delete instance.options.method;
 					returnedPromise = instance.run();
 				});
 
 				it('defaults to "GET"', () => {
-					assert.calledOnce(request);
-					assert.calledWith(request, {
-						uri: 'mock-url',
+					assert.calledOnce(axios);
+					assert.calledWith(axios, {
+						url: 'mock-url',
 						method: 'GET',
-						resolveWithFullResponse: true,
 						timeout: instance.options.interval,
 						headers: { key: instance.options.graphiteKey }
 					});
