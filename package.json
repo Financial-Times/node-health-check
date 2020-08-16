@@ -23,7 +23,7 @@
   "dependencies": {
     "axios": "^0.19.2",
     "disk-space": "^1.1.0",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.20",
     "pidusage": "^2.0.17"
   },
   "devDependencies": {
