@@ -2,9 +2,7 @@
 
 const sinon = require('sinon');
 
-const disk = module.exports = {
-	check: sinon.stub()
-};
+const disk = module.exports = sinon.stub();
 
 const mockUsage = module.exports.mockUsage = {
 	available: 10000,
@@ -12,4 +10,4 @@ const mockUsage = module.exports.mockUsage = {
 	total: 15000
 };
 
-disk.check.yieldsAsync(null, mockUsage);
+disk.yieldsAsync(null, mockUsage);
