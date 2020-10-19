@@ -2,7 +2,9 @@
 
 const sinon = require('sinon');
 
-const disk = module.exports = sinon.stub();
+const disk = sinon.stub();
+module.exports = sinon.stub().returns(disk);
+module.exports.disk = disk;
 
 const mockUsage = module.exports.mockUsage = {
 	available: 10000,
