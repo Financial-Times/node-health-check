@@ -77,8 +77,8 @@ describe('lib/check/disk-space', () => {
 			});
 
 			it('calls `disk` with the root path', () => {
-				assert.calledOnce(disk);
-				assert.calledWith(disk, '/');
+				assert.calledOnce(disk.disk);
+				assert.calledWith(disk.disk, '/');
 			});
 
 			it('returns a promise', () => {
@@ -166,7 +166,7 @@ describe('lib/check/disk-space', () => {
 					instance.checkOutput = '';
 					diskSpaceError = new Error('usage error');
 					disk.reset();
-					disk.yieldsAsync(diskSpaceError);
+					disk.disk.yieldsAsync(diskSpaceError);
 					returnedPromise = instance.run();
 				});
 
