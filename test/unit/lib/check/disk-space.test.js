@@ -76,9 +76,9 @@ describe('lib/check/disk-space', () => {
 				Date.restore();
 			});
 
-			it('calls `disk.check` with the root path', () => {
-				assert.calledOnce(disk.check);
-				assert.calledWith(disk.check, '/');
+			it('calls `disk` with the root path', () => {
+				assert.calledOnce(disk);
+				assert.calledWith(disk, '/');
 			});
 
 			it('returns a promise', () => {
@@ -119,7 +119,7 @@ describe('lib/check/disk-space', () => {
 					disk.mockUsage.free = 1000;
 					instance.ok = true;
 					instance.checkOutput = '';
-					disk.check.reset();
+					disk.reset();
 					returnedPromise = instance.run();
 				});
 
@@ -165,8 +165,8 @@ describe('lib/check/disk-space', () => {
 					instance.ok = true;
 					instance.checkOutput = '';
 					diskSpaceError = new Error('usage error');
-					disk.check.reset();
-					disk.check.yieldsAsync(diskSpaceError);
+					disk.reset();
+					disk.yieldsAsync(diskSpaceError);
 					returnedPromise = instance.run();
 				});
 
