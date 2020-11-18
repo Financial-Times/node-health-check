@@ -1,6 +1,6 @@
 {
 	"description": "Build health check functions which comply with the FT health check standard",
-	"origamiType": null,
+	"origamiType": "library",
 	"origamiVersion": 1,
 	"keywords": [],
 	"support": "https://github.com/Financial-Times/node-health-check/issues",
