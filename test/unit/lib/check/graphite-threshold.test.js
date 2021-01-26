@@ -73,7 +73,7 @@ describe('lib/check/graphite-threshold', () => {
 				};
 				sinon.stub(global, 'Date').returns(mockDate);
 				mockResponse = {
-					body: JSON.stringify([
+					data: ([
 						{ 'datapoints' :
 							[
 								[300, 1542293760]
@@ -113,7 +113,7 @@ describe('lib/check/graphite-threshold', () => {
 				});
 
 				it('receives a response body containing the correct text', () => {
-					assert.deepEqual(mockResponse, {body: JSON.stringify([{'datapoints': [[300, 1542293760]]}])}, 'Response does not match set mock response');
+					assert.deepEqual(mockResponse, {data: ([{'datapoints': [[300, 1542293760]]}])}, 'Response does not match set mock response');
 				});
 
 				it('sets the `checkOutput` property to an empty string', () => {
@@ -228,32 +228,6 @@ describe('lib/check/graphite-threshold', () => {
 
 					it('sets the `ok` property to `false`', () => {
 						assert.isFalse(instance.ok);
-					});
-
-				});
-
-			});
-
-			describe('for when the JSON response is malformed', () => {
-
-				beforeEach(() => {
-					instance.ok = true;
-					mockResponse.body = JSON.stringify([{}]);
-					returnedPromise = instance.run();
-				});
-
-				describe('.then()', () => {
-
-					beforeEach(() => {
-						return returnedPromise;
-					});
-
-					it('sets the `ok` property to `false`', () => {
-						assert.isFalse(instance.ok);
-					});
-
-					it('sets the `checkOutput` property to the error message', () => {
-						assert.strictEqual(instance.checkOutput, 'Please check that the URL is in the correct format, as it is not returning properly formatted JSON for this healthcheck.');
 					});
 
 				});
