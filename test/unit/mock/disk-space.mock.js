@@ -3,13 +3,11 @@
 const sinon = require('sinon');
 
 const disk = sinon.stub();
-module.exports = sinon.stub().returns(disk);
-module.exports.disk = disk;
+module.exports = disk;
 
 const mockUsage = module.exports.mockUsage = {
-	available: 10000,
-	free: 8000,
-	total: 15000
+	usedSize: 8000,
+	totalSize: 16000
 };
 
 disk.yieldsAsync(null, mockUsage);

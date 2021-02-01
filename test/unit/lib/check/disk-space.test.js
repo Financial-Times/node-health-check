@@ -77,8 +77,8 @@ describe('lib/check/disk-space', () => {
 			});
 
 			it('calls `disk` with the root path', () => {
-				assert.calledOnce(disk.disk);
-				assert.calledWith(disk.disk, '/');
+				assert.calledOnce(disk);
+				assert.calledWith(disk, '/');
 			});
 
 			it('returns a promise', () => {
@@ -103,8 +103,7 @@ describe('lib/check/disk-space', () => {
 				});
 
 				it('sets the `checkOutput` property to the percentage disk usage', () => {
-					const expectedPercentage = ((disk.mockUsage.available - disk.mockUsage.free) / disk.mockUsage.available) * 100;
-					assert.strictEqual(instance.checkOutput, `${expectedPercentage}% used`);
+					assert.strictEqual(instance.checkOutput, '50% used');
 				});
 
 				it('updates the `lastUpdated` property', () => {
@@ -116,7 +115,7 @@ describe('lib/check/disk-space', () => {
 			describe('when the usage is above `threshold` percent', () => {
 
 				beforeEach(() => {
-					disk.mockUsage.free = 1000;
+					disk.mockUsage.usedSize = 15000;
 					instance.ok = true;
 					instance.checkOutput = '';
 					disk.reset();
@@ -141,8 +140,7 @@ describe('lib/check/disk-space', () => {
 					});
 
 					it('sets the `checkOutput` property to the percentage memory usage', () => {
-						const expectedPercentage = ((disk.mockUsage.available - disk.mockUsage.free) / disk.mockUsage.available) * 100;
-						assert.strictEqual(instance.checkOutput, `${expectedPercentage}% used`);
+						assert.strictEqual(instance.checkOutput, '93.75% used');
 					});
 
 					it('updates the `lastUpdated` property', () => {
@@ -150,8 +148,7 @@ describe('lib/check/disk-space', () => {
 					});
 
 					it('logs that the usage failed', () => {
-						const expectedPercentage = ((disk.mockUsage.available - disk.mockUsage.free) / disk.mockUsage.available) * 100;
-						assert.calledWithExactly(log.error, `Health check "mock name" failed: ${expectedPercentage}% used`);
+						assert.calledWithExactly(log.error, 'Health check "mock name" failed: 93.75% used');
 					});
 
 				});
@@ -166,7 +163,7 @@ describe('lib/check/disk-space', () => {
 					instance.checkOutput = '';
 					diskSpaceError = new Error('usage error');
 					disk.reset();
-					disk.disk.yieldsAsync(diskSpaceError);
+					disk.yieldsAsync(diskSpaceError);
 					returnedPromise = instance.run();
 				});
 
