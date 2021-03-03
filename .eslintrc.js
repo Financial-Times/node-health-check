@@ -5,6 +5,7 @@ module.exports = {
 		'node': true,
 		'es6': true
 	},
+	'parserOptions': { 'ecmaVersion': 2018 },
 	'rules': {
 		'no-unused-vars': 2,
 		'no-undef': 2,
