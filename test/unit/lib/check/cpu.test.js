@@ -119,7 +119,7 @@ describe('lib/check/cpu', () => {
 					instance.ok = true;
 					instance.checkOutput = '';
 					instance.hasRun = true;
-					pidusage.reset();
+					pidusage.resetHistory();
 					returnedPromise = instance.run();
 				});
 
@@ -163,7 +163,7 @@ describe('lib/check/cpu', () => {
 					instance.ok = false;
 					instance.checkOutput = 'mock output';
 					delete instance.hasRun;
-					pidusage.reset();
+					pidusage.resetHistory();
 					returnedPromise = instance.run();
 				});
 
@@ -207,7 +207,7 @@ describe('lib/check/cpu', () => {
 					instance.ok = true;
 					instance.checkOutput = '';
 					pidusageError = new Error('pidusage error');
-					pidusage.reset();
+					pidusage.resetHistory();
 					pidusage.yieldsAsync(pidusageError);
 					returnedPromise = instance.run();
 				});

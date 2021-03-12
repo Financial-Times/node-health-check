@@ -122,7 +122,7 @@ describe('lib/check/memory', () => {
 					pidusage.mockPidusage.memory = 1900000000;
 					instance.ok = true;
 					instance.checkOutput = '';
-					pidusage.reset();
+					pidusage.resetHistory();
 					returnedPromise = instance.run();
 				});
 
@@ -168,7 +168,7 @@ describe('lib/check/memory', () => {
 					instance.ok = true;
 					instance.checkOutput = '';
 					pidusageError = new Error('pidusage error');
-					pidusage.reset();
+					pidusage.resetHistory();
 					pidusage.yieldsAsync(pidusageError);
 					returnedPromise = instance.run();
 				});
