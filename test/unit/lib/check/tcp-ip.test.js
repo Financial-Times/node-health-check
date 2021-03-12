@@ -149,7 +149,7 @@ describe('lib/check/tcp-ip', () => {
 					instance.ok = true;
 					instance.checkOutput = '';
 					socketError = new Error('socket error');
-					net.mockSocket.destroy.reset();
+					net.mockSocket.destroy.resetHistory();
 					net.mockSocket.on.resetBehavior();
 					net.mockSocket.on.withArgs('error').yieldsAsync(socketError);
 					returnedPromise = instance.run();
@@ -202,7 +202,7 @@ describe('lib/check/tcp-ip', () => {
 				beforeEach(() => {
 					instance.ok = true;
 					instance.checkOutput = '';
-					net.mockSocket.destroy.reset();
+					net.mockSocket.destroy.resetHistory();
 					net.mockSocket.on.resetBehavior();
 					setTimeout.callsArgAsync(0);
 					returnedPromise = instance.run();
