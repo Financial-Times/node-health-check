@@ -3,30 +3,30 @@
 const log = require('./log.mock');
 const sinon = require('sinon');
 
-module.exports = sinon.spy(Check);
-
-function Check(options) {
-	return {
+class Check {
+	constructor(options) {
 		// Mock properties
-		businessImpact: 'mock-business-impact',
-		checkOutput: 'mock-check-output',
-		id: 'mock-id',
-		interval: 'mock-interval',
-		lastUpdated: new Date(),
-		log,
-		name: 'mock-name',
-		ok: true,
-		options,
-		panicGuide: 'mock-panic-guide',
-		severity: 'mock-severity',
-		technicalSummary: 'mock-technical-summary',
+		this.businessImpact = 'mock-business-impact';
+		this.checkOutput = 'mock-check-output';
+		this.id = 'mock-id';
+		this.interval = 'mock-interval';
+		this.lastUpdated = new Date();
+		this.log = log;
+		this.name = 'mock-name';
+		this.ok = true;
+		this.options = options;
+		this.panicGuide = 'mock-panic-guide';
+		this.severity = 'mock-severity';
+		this.technicalSummary = 'mock-technical-summary';
 
 		// Methods
-		inspect: sinon.stub(),
-		isRunning: sinon.stub().returns(true),
-		run: sinon.stub(),
-		start: sinon.stub(),
-		stop: sinon.stub(),
-		toJSON: sinon.stub()
+		this.inspect = sinon.stub();
+		this.isRunning = sinon.stub().returns(true);
+		this.run = sinon.stub();
+		this.start = sinon.stub();
+		this.stop = sinon.stub();
+		this.toJSON = sinon.stub();
 	};
 }
+
+module.exports = sinon.spy(Check);
