@@ -16,7 +16,7 @@ describe('lib/check/disk-space', () => {
 		log = require('../../mock/log.mock');
 
 		disk = require('../../mock/disk-space.mock');
-		mockery.registerMock('disk-space', disk);
+		mockery.registerMock('@financial-times/disk-space', disk);
 
 		DiskSpaceCheck = require('../../../../lib/check/disk-space');
 	});

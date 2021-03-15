@@ -21,8 +21,8 @@
     "test": "make verify test"
   },
   "dependencies": {
+    "@financial-times/disk-space": "^1.0.0",
     "axios": "^0.21.1",
-    "disk-space": "^1.1.0",
     "lodash": "^4.17.21",
     "pidusage": "^2.0.17"
   },
