@@ -241,7 +241,7 @@ describe('lib/check/graphite-threshold', () => {
 					instance.ok = true;
 					instance.checkOutput = '';
 					requestError = new Error('request error');
-					axios.reset();
+					axios.resetHistory();
 					axios.rejects(requestError);
 					returnedPromise = instance.run();
 				});
@@ -282,7 +282,7 @@ describe('lib/check/graphite-threshold', () => {
 			describe('when no `method` option was specified', () => {
 
 				beforeEach(() => {
-					axios.reset();
+					axios.resetHistory();
 					delete instance.options.method;
 					returnedPromise = instance.run();
 				});
