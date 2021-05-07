@@ -21,8 +21,8 @@
     "test": "make verify test"
   },
   "dependencies": {
+    "@financial-times/disk-space": "^1.0.0",
     "axios": "^0.21.1",
-    "disk-space": "^1.1.0",
     "lodash": "^4.17.21",
     "pidusage": "^2.0.17"
   },
@@ -34,8 +34,7 @@
     "npm-prepublish": "^1.2.2",
     "nyc": "^15.0.1",
     "proclaim": "^3.4.4",
-    "sinon": "^1.17.6",
-    "sinon-as-promised": "^4.0.2",
+    "sinon": "^10.0.0",
     "snyk": "^1.455.0"
   },
   "nyc": {

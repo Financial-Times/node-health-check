@@ -373,9 +373,9 @@ describe('lib/health-check', function () {
 			let checkInstance;
 
 			beforeEach(() => {
-				checkInstance = sinon.createStubInstance(Check);
+				checkInstance = new Check();
+				Check.resetHistory();
 				options.checks = [checkInstance];
-				Check.reset();
 				instance = new HealthCheck(options);
 			});
 

@@ -123,7 +123,7 @@ describe('lib/check/ping-url', () => {
 				beforeEach(() => {
 					instance.ok = false;
 					instance.checkOutput = 'mock output';
-					axios.reset();
+					axios.resetHistory();
 					instance.options.url = () => 'mock-url-from-function';
 					returnedPromise = instance.run();
 				});
@@ -145,7 +145,7 @@ describe('lib/check/ping-url', () => {
 				beforeEach(() => {
 					instance.ok = false;
 					instance.checkOutput = 'mock output';
-					axios.reset();
+					axios.resetHistory();
 					instance.options.headers = { key : 'mock' };
 					returnedPromise = instance.run();
 				});
@@ -168,7 +168,7 @@ describe('lib/check/ping-url', () => {
 					instance.ok = true;
 					instance.checkOutput = '';
 					requestError = new Error('request error');
-					axios.reset();
+					axios.resetHistory();
 					axios.rejects(requestError);
 					returnedPromise = instance.run();
 				});
@@ -209,7 +209,7 @@ describe('lib/check/ping-url', () => {
 			describe('when no `method` option was specified', () => {
 
 				beforeEach(() => {
-					axios.reset();
+					axios.resetHistory();
 					delete instance.options.method;
 					returnedPromise = instance.run();
 				});
@@ -303,7 +303,7 @@ describe('lib/check/ping-url', () => {
 			});
 
 		});
-		
+
 		describe('when `options` has an invalid `headers` property', () => {
 
 			it('returns a descriptive error', () => {

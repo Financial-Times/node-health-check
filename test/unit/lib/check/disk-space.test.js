@@ -16,7 +16,7 @@ describe('lib/check/disk-space', () => {
 		log = require('../../mock/log.mock');
 
 		disk = require('../../mock/disk-space.mock');
-		mockery.registerMock('disk-space', disk);
+		mockery.registerMock('@financial-times/disk-space', disk);
 
 		DiskSpaceCheck = require('../../../../lib/check/disk-space');
 	});
@@ -118,7 +118,7 @@ describe('lib/check/disk-space', () => {
 					disk.mockUsage.usedSize = 15000;
 					instance.ok = true;
 					instance.checkOutput = '';
-					disk.reset();
+					disk.resetHistory();
 					returnedPromise = instance.run();
 				});
 
@@ -162,7 +162,7 @@ describe('lib/check/disk-space', () => {
 					instance.ok = true;
 					instance.checkOutput = '';
 					diskSpaceError = new Error('usage error');
-					disk.reset();
+					disk.resetHistory();
 					disk.yieldsAsync(diskSpaceError);
 					returnedPromise = instance.run();
 				});
