@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "@financial-times/disk-space": "^1.0.0",
-    "axios": "^0.21.1",
+    "axios": "^0.21.3",
     "lodash": "^4.17.21",
     "pidusage": "^2.0.17"
   },
