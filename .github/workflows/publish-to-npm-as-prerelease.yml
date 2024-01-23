@@ -15,7 +15,7 @@ jobs:
     - run: npm ci
     - name: Get the version
       id: version
-      run: echo "VERSION=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_OUTPUT
+      run: echo "VERSION=${GITHUB_REF/refs\/tags\//}" >> "$GITHUB_OUTPUT"
     - run: npm version --no-git-tag-version ${{ steps.version.outputs.VERSION }}
     - run: npm publish --tag prerelease
       env:
