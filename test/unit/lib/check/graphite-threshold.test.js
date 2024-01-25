@@ -81,7 +81,7 @@ describe('lib/check/graphite-threshold', () => {
 						}
 					])
 				};
-				axios.resolves(mockResponse);
+				axios.default.resolves(mockResponse);
 				instance.currentReading = '';
 				instance.ok = false;
 				instance.checkOutput = 'mock output';
@@ -93,8 +93,8 @@ describe('lib/check/graphite-threshold', () => {
 			});
 
 			it('calls `axios` with the expected options', () => {
-				assert.calledOnce(axios);
-				assert.calledWith(axios, {
+				assert.calledOnce(axios.default);
+				assert.calledWith(axios.default, {
 					url: 'mock-url',
 					method: 'MOCK',
 					timeout: instance.options.interval,
@@ -241,8 +241,8 @@ describe('lib/check/graphite-threshold', () => {
 					instance.ok = true;
 					instance.checkOutput = '';
 					requestError = new Error('request error');
-					axios.resetHistory();
-					axios.rejects(requestError);
+					axios.default.resetHistory();
+					axios.default.rejects(requestError);
 					returnedPromise = instance.run();
 				});
 
@@ -282,14 +282,14 @@ describe('lib/check/graphite-threshold', () => {
 			describe('when no `method` option was specified', () => {
 
 				beforeEach(() => {
-					axios.resetHistory();
+					axios.default.resetHistory();
 					delete instance.options.method;
 					returnedPromise = instance.run();
 				});
 
 				it('defaults to "GET"', () => {
-					assert.calledOnce(axios);
-					assert.calledWith(axios, {
+					assert.calledOnce(axios.default);
+					assert.calledWith(axios.default, {
 						url: 'mock-url',
 						method: 'GET',
 						timeout: instance.options.interval,

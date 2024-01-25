@@ -78,8 +78,8 @@ describe('lib/check/ping-url', () => {
 			});
 
 			it('calls `axios` with the expected options', () => {
-				assert.calledOnce(axios);
-				assert.calledWith(axios, {
+				assert.calledOnce(axios.default);
+				assert.calledWith(axios.default, {
 					url: 'mock-url',
 					headers: {},
 					method: 'MOCK',
@@ -123,14 +123,14 @@ describe('lib/check/ping-url', () => {
 				beforeEach(() => {
 					instance.ok = false;
 					instance.checkOutput = 'mock output';
-					axios.resetHistory();
+					axios.default.resetHistory();
 					instance.options.url = () => 'mock-url-from-function';
 					returnedPromise = instance.run();
 				});
 
 				it('calls `axios` with the expected options', () => {
-					assert.calledOnce(axios);
-					assert.calledWith(axios, {
+					assert.calledOnce(axios.default);
+					assert.calledWith(axios.default, {
 						url: 'mock-url-from-function',
 						headers: {},
 						method: 'MOCK',
@@ -145,14 +145,14 @@ describe('lib/check/ping-url', () => {
 				beforeEach(() => {
 					instance.ok = false;
 					instance.checkOutput = 'mock output';
-					axios.resetHistory();
+					axios.default.resetHistory();
 					instance.options.headers = { key : 'mock' };
 					returnedPromise = instance.run();
 				});
 
 				it('calls `axios` with the expected options', () => {
-					assert.calledOnce(axios);
-					assert.calledWith(axios, {
+					assert.calledOnce(axios.default);
+					assert.calledWith(axios.default, {
 						url: 'mock-url',
 						headers: { key : 'mock' },
 						method: 'MOCK',
@@ -168,8 +168,8 @@ describe('lib/check/ping-url', () => {
 					instance.ok = true;
 					instance.checkOutput = '';
 					requestError = new Error('request error');
-					axios.resetHistory();
-					axios.rejects(requestError);
+					axios.default.resetHistory();
+					axios.default.rejects(requestError);
 					returnedPromise = instance.run();
 				});
 
@@ -209,14 +209,14 @@ describe('lib/check/ping-url', () => {
 			describe('when no `method` option was specified', () => {
 
 				beforeEach(() => {
-					axios.resetHistory();
+					axios.default.resetHistory();
 					delete instance.options.method;
 					returnedPromise = instance.run();
 				});
 
 				it('defaults to "HEAD"', () => {
-					assert.calledOnce(axios);
-					assert.calledWith(axios, {
+					assert.calledOnce(axios.default);
+					assert.calledWith(axios.default, {
 						url: 'mock-url',
 						headers: {},
 						method: 'HEAD',
