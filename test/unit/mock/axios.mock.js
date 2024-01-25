@@ -2,4 +2,4 @@
 
 const sinon = require('sinon');
 
-module.exports = sinon.stub().resolves();
+module.exports = {default: sinon.stub().resolves()};
