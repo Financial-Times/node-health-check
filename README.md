@@ -22,7 +22,7 @@ Build health check functions which comply with the [FT health check standard].
 
 ### Requirements
 
-Running the Health Check module requires [Node.js] 10.x and [npm]. You can install with:
+Running the Health Check module requires [Node.js] and [npm]. You can install with:
 
 ```sh
 npm install @financial-times/health-check
@@ -260,8 +260,9 @@ New versions of the module are published automatically by CI when a new tag is c
 
 State | Major Version | Last Minor Release | Migration guide |
 :---: | :---: | :---: | :---:
-✨ active | 2 | N/A | [migrate to v2](MIGRATION.md#migrating-from-v1-to-v2) |
-⚠ maintained | 1 | 1.11 | N/A |
+✨ active | 3 | N/A | [migrate to v3](MIGRATION.md#migrating-from-v2-to-v3) |
+╳ deprecated | 2.1 | N/A | [migrate to v2](MIGRATION.md#migrating-from-v1-to-v2) |
+╳ deprecated| 1 | 1.11 | N/A |
 
 
 ## Contact
