@@ -1,6 +1,6 @@
 # Migration
 
-## Migrating from v3 t v4
+## Migrating from v3 to v4
 
 The `graphite-threshold` check has now been removed in line with the deprecation of the Graphite service. We recommend removing this check from your code and following [Edge Delivery and Observability's guide to replacing Graphite](https://financialtimes.atlassian.net/wiki/spaces/DS/pages/8408989698/Migrating+an+app+away+from+Graphite-based+health+checks):
 
