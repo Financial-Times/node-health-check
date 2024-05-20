@@ -435,7 +435,6 @@ describe('lib/health-check', function () {
 		assert.strictEqual(HealthCheck.checkTypeMap['memory'], MemoryCheck);
 		assert.strictEqual(HealthCheck.checkTypeMap['ping-url'], PingUrlCheck);
 		assert.strictEqual(HealthCheck.checkTypeMap['tcp-ip'], TcpIpCheck);
-		assert.strictEqual(HealthCheck.checkTypeMap['graphite-threshold'], GraphiteThresholdCheck);
 	});
 
 	it('has a `Check` static property', () => {
