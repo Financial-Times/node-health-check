@@ -16,7 +16,6 @@ describe('lib/health-check', function () {
 	let MemoryCheck;
 	let PingUrlCheck;
 	let TcpIpCheck;
-	let GraphiteThresholdCheck;
 
 	beforeEach(() => {
 		Check = require('../mock/check.mock');
@@ -36,9 +35,6 @@ describe('lib/health-check', function () {
 
 		TcpIpCheck = require('../mock/tcp-ip-check.mock');
 		mockery.registerMock('./check/tcp-ip', TcpIpCheck);
-
-		GraphiteThresholdCheck = require('../mock/graphite-threshold.mock');
-		mockery.registerMock('./check/graphite-threshold', GraphiteThresholdCheck);
 
 		defaults = sinon.spy(require('lodash/defaults'));
 		mockery.registerMock('lodash/defaults', defaults);
