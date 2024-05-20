@@ -174,16 +174,6 @@ The `tcp-ip` type requires some additional configuration:
   - `host`: The hostname that the check should ping
   - `port`: The TCP port to use when pinging the hostname. Defaults to `80`
 
-#### Check Type: Graphite Threshold
-
-The `graphite-threshold` type requires some additional configuration:
-
-  - `graphiteKey`: Ensure you have your API key for Graphite set in your environment variables as `FT_GRAPHITE_KEY`, then pass this in to the healthcheck options
-  - `url`: the full Graphite URL you want to receive a response from. Regarding the URL, it is best to pass in a URL that uses Graphite's summarize() function to get the average of a set of datapoints across your specified interval and use this in the healthcheck. For example, in the following URL — https://graphitev2-api.ft.com/render/?from=-5minutes&target=summarize(internalproducts.heroku.ip-envoy.worker_1.queue.task,%20%225minutes%22,%20%22avg%22,%20true)&format=json — we ask Graphite that, `from` the last 5 minutes (`-5minutes`) of datapoints on `internalproducts.heroku.ip-envoy.worker_1.queue.task`, we want to `summarize` the average (`avg`) into a single datapoint in buckets of 5 minute intervals.
-  - `threshold`: the number you want to set as your threshold to check against
-  - `direction`: set `above` if you want to check if something exceeds your threshold, or `below` if something falls below it
-  - `interval`: how often to check
-
 See `examples` for sample usage.
 
 ### Examples

@@ -8,7 +8,6 @@ const assert = require('proclaim');
 const Check = require('../../lib/check');
 const CpuCheck = require('../../lib/check/cpu');
 const DiskSpaceCheck = require('../../lib/check/disk-space');
-const GraphiteThresholdCheck = require('../../lib/check/graphite-threshold');
 const MemoryCheck = require('../../lib/check/memory');
 const PingUrlCheck = require('../../lib/check/ping-url');
 const TcpIpCheck = require('../../lib/check/tcp-ip');
@@ -158,195 +157,161 @@ describe('health-check', function () {
 						businessImpact: 'New files may not be saved',
 						technicalSummary: 'Something went wrong!',
 						panicGuide: 'Don\'t panic',
-					},
-
-					// This check monitors the number of events in the Envoy queue
-					// It will fail if the averge number of events in the Envoy
-					// queue falls below 50 in a 5-minute interval
-					{
-						// These properties are used to configure
-						// the graphite-threshold check
-						type: 'graphite-threshold',
-						// This URL receives data about the average
-						// number of events being processed by the
-						// Envoy task queue over the previous 5 mins
-						url:
-							'https://graphitev2-api.ft.com/render/?from=-5minutes&target=summarize(internalproducts.heroku.ip-envoy.worker_1.queue.task,%20%225minutes%22,%20%22avg%22,%20true)&format=json',
-						threshold: 50,
-						direction: 'below',
-						interval: 300000,
-						/* eslint-disable */
-						graphiteKey: process.env.FT_GRAPHITE_KEY,
-						/* eslint-disable */
-						// These properties are output in the health
-						// check JSON
-						id: "envoy-event-queue-check",
-						name: "Envoy event queue check 💯 👀",
-						severity: 3,
-						businessImpact:
-							"The number of events in the Envoy queue has dropped below the specified threshold.",
-						technicalSummary:
-							"This might indicate an issue and should be monitored.",
-						panicGuide: "Inspect RabbitMQ to see if anything is amiss.",
-					},
+					}
 				],
-			})
-		})
+			});
+		});
 
-		it("has an `options` property set", () => {
-			assert.isDefined(health.options)
-		})
+		it('has an `options` property set', () => {
+			assert.isDefined(health.options);
+		});
 
 
-		it("has a `checkObjects` property set to an array of the created checks", () => {
+		it('has a `checkObjects` property set to an array of the created checks', () => {
             assert.isArray(health.checkObjects);
-            assert.deepStrictEqual(health.checkObjects.length, 7);
-		})
+            assert.deepStrictEqual(health.checkObjects.length, 6);
+		});
 
-        it("creates a Check for each configuration in `options.checks`, using the class that their `type` property maps to", () => {
+        it('creates a Check for each configuration in `options.checks`, using the class that their `type` property maps to', () => {
             assert.isInstanceOf(health.checkObjects[0], CustomCheck);
-        })
+        });
 
-		it("has a `stop` method", () => {
-			assert.isFunction(health.stop)
-		})
+		it('has a `stop` method', () => {
+			assert.isFunction(health.stop);
+		});
 
-		it("has a `checks` method", () => {
-			assert.isFunction(health.checks)
-		})
+		it('has a `checks` method', () => {
+			assert.isFunction(health.checks);
+		});
 
-		describe(".checks()", () => {
+		describe('.checks()', () => {
 
-			it("returns a function", () => {
-				assert.isFunction(health.checks())
-			})
+			it('returns a function', () => {
+				assert.isFunction(health.checks());
+			});
 
-			describe(".checks()()", () => {
+			describe('.checks()()', () => {
 
-				it("returns a promise", () => {
-					assert.isInstanceOf(health.checks()(), Promise)
-				})
+				it('returns a promise', () => {
+					assert.isInstanceOf(health.checks()(), Promise);
+				});
 
-				describe(".then()", () => {
+				describe('.then()', () => {
 
-					it("resolves with the health check as an array", async () => {
+					it('resolves with the health check as an array', async () => {
                         const result = await health.checks()();
-						assert.isArray(result)
-					})
-				})
-			})
-		})
+						assert.isArray(result);
+					});
+				});
+			});
+		});
 
-		it("has a `gtg` method", () => {
-			assert.isFunction(health.gtg)
-		})
+		it('has a `gtg` method', () => {
+			assert.isFunction(health.gtg);
+		});
 
-		describe(".gtg()", () => {
+		describe('.gtg()', () => {
 
-			it("returns a function", () => {
-				assert.isFunction(health.gtg())
-			})
+			it('returns a function', () => {
+				assert.isFunction(health.gtg());
+			});
 
-			describe(".gtg()()", () => {
+			describe('.gtg()()', () => {
 
-				it("returns a promise", () => {
-					assert.isInstanceOf(health.gtg()(), Promise)
-				})
+				it('returns a promise', () => {
+					assert.isInstanceOf(health.gtg()(), Promise);
+				});
 
-				describe(".then()", () => {
-					it("resolves with `true`", async () => {
+				describe('.then()', () => {
+					it('resolves with `true`', async () => {
                         const result = await health.gtg()();
-						assert.isTrue(result)
-					})
-				})
-			})
-		})
+						assert.isTrue(result);
+					});
+				});
+			});
+		});
 
-		it("has a `toJSON` method", () => {
-			assert.isFunction(health.toJSON)
-		})
+		it('has a `toJSON` method', () => {
+			assert.isFunction(health.toJSON);
+		});
 
-		describe(".toJSON()", () => {
-			it("returns an array of each check JSONified", () => {
-				assert.isArray(health.toJSON())
+		describe('.toJSON()', () => {
+			it('returns an array of each check JSONified', () => {
+				assert.isArray(health.toJSON());
                 for (const check of health.toJSON()) {
-                    assert.isDefined(check, 'businessImpact')
-                    assert.isDefined(check, 'checkOutput')
-                    assert.isDefined(check, 'id')
-                    assert.isDefined(check, 'lastUpdated')
-                    assert.isDefined(check, 'name')
-                    assert.isDefined(check, 'ok')
-                    assert.isDefined(check, 'panicGuide')
-                    assert.isDefined(check, 'severity')
-                    assert.isDefined(check, 'technicalSummary')
+                    assert.isDefined(check, 'businessImpact');
+                    assert.isDefined(check, 'checkOutput');
+                    assert.isDefined(check, 'id');
+                    assert.isDefined(check, 'lastUpdated');
+                    assert.isDefined(check, 'name');
+                    assert.isDefined(check, 'ok');
+                    assert.isDefined(check, 'panicGuide');
+                    assert.isDefined(check, 'severity');
+                    assert.isDefined(check, 'technicalSummary');
                 }
-			})
-		})
+			});
+		});
 
-		it("has an `inspect` method", () => {
-			assert.isFunction(health.inspect)
-		})
+		it('has an `inspect` method', () => {
+			assert.isFunction(health.inspect);
+		});
 
-		describe("when a class does not exist for a given check type", () => {
+		describe('when a class does not exist for a given check type', () => {
 
-			it("throws an error", () => {
+			it('throws an error', () => {
 				assert.throws(
 					() => new HealthCheck({
                         checks: [
                             {
-                                id: "mock-check-4",
-                                type: "mock-type-4",
+                                id: 'mock-check-4',
+                                type: 'mock-type-4',
                             }
                         ]
                     }),
-					"Invalid check type: mock-type-4"
-				)
-			})
-		})
+					'Invalid check type: mock-type-4'
+				);
+			});
+		});
 
-        describe(".stop()", () => {
+        describe('.stop()', () => {
 			beforeEach(() => {
-				health.stop()
-			})
+				health.stop();
+			});
 
-			it("stops each check from running", () => {
+			it('stops each check from running', () => {
                 for (const check of health.checkObjects) {
-                    assert.isFalse(check.isRunning())
+                    assert.isFalse(check.isRunning());
                 }
-			})
-		})
-	})
+			});
+		});
+	});
 
-	it("has a `defaultOptions` static property", () => {
-		assert.isObject(HealthCheck.defaultOptions)
-	})
+	it('has a `defaultOptions` static property', () => {
+		assert.isObject(HealthCheck.defaultOptions);
+	});
 
-	describe(".defaultOptions", () => {
-		it("has a `checks` property", () => {
-			assert.deepEqual(HealthCheck.defaultOptions.checks, [])
-		})
+	describe('.defaultOptions', () => {
+		it('has a `checks` property', () => {
+			assert.deepEqual(HealthCheck.defaultOptions.checks, []);
+		});
 
-		it("has a `log` property", () => {
-			assert.strictEqual(HealthCheck.defaultOptions.log, console)
-		})
-	})
+		it('has a `log` property', () => {
+			assert.strictEqual(HealthCheck.defaultOptions.log, console);
+		});
+	});
 
-	it("has a `checkTypeMap` static property", () => {
-		assert.isInstanceOf(HealthCheck.checkTypeMap, Object)
-		assert.strictEqual(HealthCheck.checkTypeMap["cpu"], CpuCheck)
-		assert.strictEqual(HealthCheck.checkTypeMap["disk-space"], DiskSpaceCheck)
-		assert.strictEqual(HealthCheck.checkTypeMap["memory"], MemoryCheck)
-		assert.strictEqual(HealthCheck.checkTypeMap["ping-url"], PingUrlCheck)
-		assert.strictEqual(HealthCheck.checkTypeMap["tcp-ip"], TcpIpCheck)
-		assert.strictEqual(
-			HealthCheck.checkTypeMap["graphite-threshold"],
-			GraphiteThresholdCheck
-		)
-	})
+	it('has a `checkTypeMap` static property', () => {
+		assert.isInstanceOf(HealthCheck.checkTypeMap, Object);
+		assert.strictEqual(HealthCheck.checkTypeMap['cpu'], CpuCheck);
+		assert.strictEqual(HealthCheck.checkTypeMap['disk-space'], DiskSpaceCheck);
+		assert.strictEqual(HealthCheck.checkTypeMap['memory'], MemoryCheck);
+		assert.strictEqual(HealthCheck.checkTypeMap['ping-url'], PingUrlCheck);
+		assert.strictEqual(HealthCheck.checkTypeMap['tcp-ip'], TcpIpCheck);
+	});
 
-	it("has a `Check` static property", () => {
-		assert.strictEqual(HealthCheck.Check, Check)
-	})
+	it('has a `Check` static property', () => {
+		assert.strictEqual(HealthCheck.Check, Check);
+	});
 
 
-})
+});
