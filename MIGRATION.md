@@ -2,7 +2,7 @@
 
 ## Migrating from v3 to v4
 
-The `graphite-threshold` check has now been removed in line with the deprecation of the Graphite service. We recommend removing this check from your code and following [Edge Delivery and Observability's guide to replacing Graphite](https://financialtimes.atlassian.net/wiki/spaces/DS/pages/8408989698/Migrating+an+app+away+from+Graphite-based+health+checks):
+The `graphite-threshold` check has now been removed in line with the deprecation of the Graphite service. We recommend removing this check from your code and following [Edge Delivery and Observability's guide to replacing Graphite health checks with Grafana alerts](https://financialtimes.atlassian.net/wiki/spaces/EDO/blog/2024/04/16/8368095241/Migrating+from+Graphite+to+OpenTelemetry#Replacing-health-check-checks-with-Graphite-alerts):
 
 ```diff
 const health = new HealthCheck({
